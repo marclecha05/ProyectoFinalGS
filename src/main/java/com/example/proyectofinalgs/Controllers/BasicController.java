@@ -21,7 +21,12 @@ public class BasicController {
 
     @GetMapping("/a")
     public List<Cliente> findAll() {
-        log.info("Ejecuta findAll de Clientes");
+        log.info("Ejecuta findAll de Clientes sin autorizado");
+        return clienteService.findAll();
+    }
+    @GetMapping("/b")
+    public List<Cliente> findAllCliente() {
+        log.info("Ejecuta findAll de Clientes con autorizado");
         return clienteService.findAll();
     }
 
