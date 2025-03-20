@@ -8,11 +8,12 @@
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Jura:wght@300..700&display=swap" rel="stylesheet">    <style>
+    <link href="https://fonts.googleapis.com/css2?family=Jura:wght@300..700&display=swap" rel="stylesheet">
+    <style>
         body {
+            font-family: Jura,serif;
             background-color: #f8f5eb;
             height: 100vh;
-            display: flex;
             justify-content: center;
             align-items: center;
         }
@@ -25,18 +26,51 @@
         .login-btn {
             background-color: #ff8c42;
             border:  #ff8c42 solid;
+
         }
+        a.login-btn{
+            color: white;
+            font-weight: bold;
+            border-radius: 5px;
+            padding: 10px 20px;
+            transition: background-color 0.3s ease;
+            outline: none;
+        }
+
     </style>
 </head>
 <body class="bg-light d-flex justify-content-center align-items-center vh-100" style="background-image: url(image/Fondo.jpeg); background-size: cover; background-position: center;">
 <div class="container text-center position-relative">
-    <div class="card p-4 shadow position-relative" style="max-width: 400px; margin: auto; border-radius: 10px;">
+    <div class="card p-4 shadow position-relative" style="max-width: 100em; margin: auto; border-radius: 10px;">
         <h1 class="position-absolute start-50 translate-middle-x" style="top: -30px; padding: 0 10px; font-family: 'Jura', monospace; font-size: 3rem; font-weight: bold;">
             Turnify
         </h1>
-        <form>
-        <button type="submit" class="btn login-btn w-100 text-black">Log with Google</button>
-    </form>
+        <div class="card p-4 shadow mt-4" style="max-width: 80em; margin: auto; border-radius: 10px;">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h2>¿Quiénes Somos?</h2>
+                    <p>Turnify es una aplicación diseñada para simplificar la gestión de turnos y reservas en negocios como salones de belleza, clínicas, gimnasios, restaurantes y más. Su plataforma intuitiva permite a los clientes reservar fácilmente desde cualquier dispositivo y a los negocios optimizar su agenda sin esfuerzo.
+
+                        Con funciones como integración con calendarios, recordatorios automáticos, Turnify ayuda a reducir trabajos extras para los trabajadores, cancelaciones, mejorar la organización, reduccion del uso del papel y desperdicios y ofrecer una experiencia de usuario fluida y eficiente.
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <img src="image/QuienesSomos.webp" class="img-fluid rounded" alt="Foto de Turnify">
+                </div>
+            </div>
+            <div>
+        </div>
+    </div>
+        <div>
+            aa
+        </div>
+        <div class="oauth-buttons">
+            <a href="/oauth2/authorization/google" class="login-btn">
+                Iniciar sesión con Google
+            </a>
+        </div>
+
+
 </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

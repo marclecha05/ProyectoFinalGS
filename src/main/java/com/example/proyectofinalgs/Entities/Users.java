@@ -1,6 +1,7 @@
 package com.example.proyectofinalgs.Entities;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 
 @Entity
 public class Users {
@@ -8,8 +9,7 @@ public class Users {
     private String username;
     private String password;
     private boolean enabled;
-
-
+    private String email;
 
     public String getUsername() {
         return username;
@@ -33,5 +33,11 @@ public class Users {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public void setEmail(String email) {
+    }
+    public String getEmail() {
+        return email;
     }
 }

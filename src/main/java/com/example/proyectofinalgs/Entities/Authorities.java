@@ -1,20 +1,28 @@
 package com.example.proyectofinalgs.Entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
+@Table(name = "authorities")
 public class Authorities {
+
     @Id
-    private String username;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "username", nullable = false)
+    private Users user;
+
+    @Column(nullable = false)
     private String authority;
 
-    public String getUsername() {
-        return username;
+    public Users getUser() {
+        return user;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUser(Users user) {
+        this.user = user;
     }
 
     public String getAuthority() {
