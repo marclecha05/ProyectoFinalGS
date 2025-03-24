@@ -1,17 +1,27 @@
 package com.example.proyectofinalgs.Entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 public class Provider {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private int userId;
-    private String providerName;
-    private String providerEmail;
+
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @Column(nullable = false)
+    private String serviceName;
+
     private String description;
     private String calendarId;
+
+    @OneToMany(mappedBy = "provider", cascade = CascadeType.ALL)
+    private List<Reserva> reservas;
 
     public int getId() {
         return id;
@@ -21,28 +31,20 @@ public class Provider {
         this.id = id;
     }
 
-    public int getUserId() {
-        return userId;
+    public String getServiceName() {
+        return serviceName;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setServiceName(String serviceName) {
+        this.serviceName = serviceName;
     }
 
-    public String getProviderName() {
-        return providerName;
+    public User getUser() {
+        return user;
     }
 
-    public void setProviderName(String providerName) {
-        this.providerName = providerName;
-    }
-
-    public String getProviderEmail() {
-        return providerEmail;
-    }
-
-    public void setProviderEmail(String providerEmail) {
-        this.providerEmail = providerEmail;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getDescription() {
@@ -51,6 +53,14 @@ public class Provider {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<Reserva> getReservas() {
+        return reservas;
+    }
+
+    public void setReservas(List<Reserva> reservas) {
+        this.reservas = reservas;
     }
 
     public String getCalendarId() {
