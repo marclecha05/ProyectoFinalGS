@@ -16,6 +16,9 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Column()
+    private String rol;
+
     @Column(nullable = false)
     private String email;
 
@@ -51,7 +54,12 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
-
+    public String getRol() {
+        return rol;
+    }
+    public void setRol(String rol) {
+        this.rol = rol;
+    }
     public boolean isEnabled() {
         return enabled;
     }

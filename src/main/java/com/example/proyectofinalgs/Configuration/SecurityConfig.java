@@ -7,10 +7,8 @@ import com.example.proyectofinalgs.Services.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -38,21 +36,20 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/login", "/logout") // Ignora CSRF solo en rutas específicas
-                )
+                        .ignoringRequestMatchers("/login", "/logout")) // Ignora CSRF solo en rutas específicas
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/home", "/login", "/logout", "/error").permitAll()
-                        .anyRequest().authenticated()
-                )
+                        .requestMatchers("/register.html", "/registerdos.html", "/registertres.html", "/login", "/logout", "/error").permitAll()
+                        .requestMatchers("/home", "/user").hasRole("USUARIO")
+                        .requestMatchers("/homeAmbos", "/userProveedor").hasRole("PROVEEDOR_AMBOS")
+                        .requestMatchers("/calendarioProveedor").hasRole("PROVEEDOR_LABORAL")
+                        .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/login")
-                        .defaultSuccessUrl("/home", true) // Cambia la ruta a "/home" manejada por el controlador
+                        .defaultSuccessUrl("/home", true) // Redirige a "/home" tras login
                         .failureUrl("/login?error")
                         .userInfoEndpoint(userInfo -> userInfo
-                                .userService(customOAuth2UserService)
-                        )
-                        .successHandler(oauth2SuccessHandler()) // Manejo de éxito personalizado
-                )
+                                .userService(customOAuth2UserService))
+                        .successHandler(oauth2SuccessHandler())) // Manejo de éxito personalizado
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessHandler((request, response, authentication) -> {
@@ -61,8 +58,7 @@ public class SecurityConfig {
                         })
                         .clearAuthentication(true)
                         .deleteCookies("JSESSIONID")
-                        .permitAll()
-                );
+                        .permitAll());
 
         return http.build();
     }
@@ -86,21 +82,28 @@ public class SecurityConfig {
                 user = new User();
                 user.setEmail(email);
                 user.setUsername(name != null ? name : "Usuario sin nombre");
-                user.setPassword(passwordEncoder().encode("1")); // Cambia la contraseña por un valor seguro
-                userRepository.save(user); // Guarda el usuario sin establecer contraseña
+                user.setPassword(passwordEncoder().encode("default_password")); // Contraseña predeterminada
+                userRepository.save(user); // Guarda el usuario con datos mínimos
+                response.sendRedirect("/register");
+            } else {
+                switch (user.getRol()) {
+                    case "ROLE_USUARIO" -> response.sendRedirect("/home");
+                    case "ROLE_PROVEEDOR_AMBOS" -> response.sendRedirect("/homeAmbos");
+                    case "ROLE_PROVEEDOR_LABORAL" -> response.sendRedirect("/calendarioempresa");
+                    default -> response.sendRedirect("/register");
+                }
             }
 
-            /* try {
+           /* try {
                 // Envía el correo de bienvenida
                 emailService.enviarCorreo(email, "¡Bienvenido a Turnify!", "Hola " + name + ", gracias por registrarte en Turnify.");
             } catch (MessagingException e) {
                 e.printStackTrace(); // Registra la excepción en el log
             }
 */
-            // Redirige a la página principal
-            response.sendRedirect("/home.html");
         };
     }
+
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
@@ -108,10 +111,9 @@ public class SecurityConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins("*")
-                        .allowedMethods("GET", "POST", "PUT", "DELETE0", "OPTIONS")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*");
             }
         };
     }
-
 }

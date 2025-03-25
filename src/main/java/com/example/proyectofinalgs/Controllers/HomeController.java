@@ -9,8 +9,19 @@ public class HomeController {
 
     @GetMapping("/home")
     public String home(Model model) {
-        model.addAttribute("title", "Home"); // Agregar el título a la vista
-        return "home"; // Nombre del archivo HTML en templates
+        model.addAttribute("title", "Home Usuario");
+        return "home";
+    }
+
+    @GetMapping("/homeAmbos")
+    public String homeAmbos(Model model) {
+        model.addAttribute("title", "Home Proveedor Ambos");
+        return "homeAmbos";
+    }
+
+    @GetMapping("/calendarioempresa")
+    public String calendarioProveedor(Model model) {
+        model.addAttribute("title", "Calendario Proveedor Laboral");
+        return "calendarioProveedor";
     }
 }
-

@@ -4,10 +4,10 @@ import com.example.proyectofinalgs.Services.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class LoginController {
+
     private final UserService userService;
 
     public LoginController(UserService userService) {
@@ -19,10 +19,4 @@ public class LoginController {
         model.addAttribute("users", userService.findAll());
         return "login";
     }
-
-    @PostMapping("/home")
-    public String homePage(Model model) {
-        return "home";
-    }
 }
-
