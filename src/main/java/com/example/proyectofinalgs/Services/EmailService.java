@@ -21,7 +21,7 @@ public class EmailService {
         helper.setFrom("turnify2025@gmail.com");
         helper.setTo(destinatario);
         helper.setSubject(asunto);
-        helper.setText(contenido, true); // true para HTML
+        helper.setText(contenido, true); //true para HTML
         mailSender.send(mensaje);
     }
 }

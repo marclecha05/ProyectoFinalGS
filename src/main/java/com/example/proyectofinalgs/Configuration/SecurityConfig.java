@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -35,17 +36,16 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/login", "/logout")) // Ignora CSRF solo en rutas específicas
+        http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/register.html", "/registerdos.html", "/registertres.html", "/login", "/logout", "/error").permitAll()
-                        .requestMatchers("/home", "/user").hasRole("USUARIO")
-                        .requestMatchers("/homeAmbos", "/userProveedor").hasRole("PROVEEDOR_AMBOS")
-                        .requestMatchers("/calendarioProveedor").hasRole("PROVEEDOR_LABORAL")
+                        .requestMatchers("/register.html", "/registerdos.html", "/registertres.html", "/login","/registerForm", "/logout", "/error.html").permitAll()
+                        .requestMatchers("/home.html", "/user.html").hasRole("USUARIO")
+                        .requestMatchers("/homeAmbos.html", "/userProveedor.html").hasRole("PROVEEDOR_AMBOS")
+                        .requestMatchers("/calendarioProveedor.html").hasRole("PROVEEDOR_LABORAL")
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/login")
-                        .defaultSuccessUrl("/home", true) // Redirige a "/home" tras login
+                        .defaultSuccessUrl("/home.html", true) // Redirige a "/home" tras login
                         .failureUrl("/login?error")
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(customOAuth2UserService))
@@ -84,13 +84,13 @@ public class SecurityConfig {
                 user.setUsername(name != null ? name : "Usuario sin nombre");
                 user.setPassword(passwordEncoder().encode("default_password")); // Contraseña predeterminada
                 userRepository.save(user); // Guarda el usuario con datos mínimos
-                response.sendRedirect("/register");
+                response.sendRedirect("/register.html");
             } else {
                 switch (user.getRol()) {
-                    case "ROLE_USUARIO" -> response.sendRedirect("/home");
-                    case "ROLE_PROVEEDOR_AMBOS" -> response.sendRedirect("/homeAmbos");
-                    case "ROLE_PROVEEDOR_LABORAL" -> response.sendRedirect("/calendarioempresa");
-                    default -> response.sendRedirect("/register");
+                    case "USUARIO" -> response.sendRedirect("/home.html");
+                    case "PROVEEDOR_AMBOS" -> response.sendRedirect("/homeAmbos.html");
+                    case "PROVEEDOR_LABORAL" -> response.sendRedirect("/calendarioempresa.html");
+                    default -> response.sendRedirect("/register.html");
                 }
             }
 
