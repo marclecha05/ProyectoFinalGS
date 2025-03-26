@@ -1,6 +1,8 @@
 package com.example.proyectofinalgs.Controllers;
 
+import com.example.proyectofinalgs.Entities.Cliente;
 import com.example.proyectofinalgs.Entities.User;
+import com.example.proyectofinalgs.Repositories.ClienteRepository;
 import com.example.proyectofinalgs.Repositories.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
@@ -15,9 +17,11 @@ import java.io.IOException;
 public class RegisterController {
 
     private final UserRepository userRepository;
+    private final ClienteRepository clienteRepository;
 
-    public RegisterController(UserRepository userRepository) {
+    public RegisterController(UserRepository userRepository, ClienteRepository clienteRepository) {
         this.userRepository = userRepository;
+        this.clienteRepository = clienteRepository;
     }
 
     @PostMapping("/registerForm")
@@ -30,20 +34,23 @@ public class RegisterController {
 
         if (user != null) {
             if ("usuario".equals(respuesta1)) {
-                user.setRol("USUARIO");
+                Cliente cliente = new Cliente();
+                cliente.setUser(user); // Asociar el usuario al cliente
+                cliente.setNombre(user.getUsername()); // Usar el nombre del usuario como nombre del cliente
+
+                // Asignar el rol de cliente al usuario
+                user.setRol("USUARIO_ROL");
+
+                // Guardar el cliente y el usuario en la base de datos
+                clienteRepository.save(cliente);
                 userRepository.save(user);
-                response.sendRedirect("/home");
+
+                // Redirigir al home para usuarios
+                response.sendRedirect("/home.html");
             } else if ("proveedor".equals(respuesta1)) {
-                if ("ambos".equals(respuesta2)) {
-                    user.setRol("PROVEEDOR_AMBOS");
-                    userRepository.save(user);
-                    response.sendRedirect("/registerdos.html");
-                } else if ("laboral".equals(respuesta2)) {
                     user.setRol("PROVEEDOR_LABORAL");
                     userRepository.save(user);
                     response.sendRedirect("/registerdos.html");
-                }
-
             }
         } else {
             response.sendRedirect("/register.html");

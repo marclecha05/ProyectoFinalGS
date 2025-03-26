@@ -39,9 +39,8 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/register.html", "/registerdos.html", "/registertres.html", "/login","/registerForm", "/logout", "/error.html").permitAll()
-                        .requestMatchers("/home.html", "/user.html").hasRole("USUARIO")
-                        .requestMatchers("/homeAmbos.html", "/userProveedor.html").hasRole("PROVEEDOR_AMBOS")
-                        .requestMatchers("/calendarioProveedor.html").hasRole("PROVEEDOR_LABORAL")
+                        .requestMatchers("/home.html", "/user.html").hasRole("USUARIO_ROL")
+                        .requestMatchers("/calendarioProveedor.html", "/userProveedor").hasRole("PROVEEDOR_LABORAL")
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/login")
@@ -87,8 +86,7 @@ public class SecurityConfig {
                 response.sendRedirect("/register.html");
             } else {
                 switch (user.getRol()) {
-                    case "USUARIO" -> response.sendRedirect("/home.html");
-                    case "PROVEEDOR_AMBOS" -> response.sendRedirect("/homeAmbos.html");
+                    case "USUARIO_ROL" -> response.sendRedirect("/home.html");
                     case "PROVEEDOR_LABORAL" -> response.sendRedirect("/calendarioempresa.html");
                     default -> response.sendRedirect("/register.html");
                 }

@@ -16,8 +16,10 @@ public class Provider {
 
     @Column(nullable = false)
     private String serviceName;
-
+    private String serviceType;
     private String description;
+    private String location;
+    private String durationTurn;
     private String calendarId;
 
     @OneToMany(mappedBy = "provider", cascade = CascadeType.ALL)
@@ -37,6 +39,30 @@ public class Provider {
 
     public void setServiceName(String serviceName) {
         this.serviceName = serviceName;
+    }
+
+    public String getServiceType() {
+        return serviceType;
+    }
+
+    public void setServiceType(String serviceType) {
+        this.serviceType = serviceType;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getDurationTurn() {
+        return durationTurn;
+    }
+
+    public void setDurationTurn(String durationTurn) {
+        this.durationTurn = durationTurn;
     }
 
     public User getUser() {

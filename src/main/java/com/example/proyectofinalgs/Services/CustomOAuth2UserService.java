@@ -2,6 +2,7 @@ package com.example.proyectofinalgs.Services;
 
 import com.example.proyectofinalgs.Entities.User;
 import com.example.proyectofinalgs.Repositories.UserRepository;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -10,6 +11,11 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import java.io.IOException;
+
 
 @Service
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
@@ -46,6 +52,25 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
             // Establece una contraseña predeterminada codificada
             user.setPassword(passwordEncoder.encode("1"));  // O cualquier otra lógica
             userRepository.save(user);
+        } else {
+
+            // Add this line at the beginning of the loadUser method
+            HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
+            
+            // Then, the rest of your code
+            if (user.getRol().equals("USUARIO_ROL")){
+                try {
+                    response.sendRedirect("/home.html");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            } else if (user.getRol().equals("PROVEEDOR_LABORAL")){
+                try {
+                    response.sendRedirect("/calendarioProveedor.html");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
 
         // Devuelve el usuario autenticado directamente
