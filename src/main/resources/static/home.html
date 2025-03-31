@@ -141,57 +141,43 @@
 </body>
 </html>
 <script>
-    let proveedores = [];
     let selectedService = "restaurante";
-    const data = [
-        { serviceName: "Fontanela", serviceType: "restaurante", location: "39.96252161264249, -0.26458602630444156" },
-        { serviceName: "come y callar", serviceType: "restaurante", location: "34.052235,-118.243683" },
-        { serviceName: "Gimnasio X", serviceType: "gimnasio", location: "51.507351,-0.127758" },
-        { serviceName: "trim", serviceType: "gimnasio", location: "48.856613,2.352222" },
-        { serviceName: "Peluquería 1", serviceType: "peluqueria", location: "41.902782,12.496366" },
-        { serviceName: "ferris", serviceType: "peluqueria", location: "35.689487,139.691711" }
-    ];
+    let proveedores = [];
 
     function getProveedores() {
-        /* $.get("/proveedores", (data) => {
-             proveedores = data;
-             renderProveedores();
-         })
-             .fail((error) => console.error("Error al obtener proveedores:", error));*/
-        setTimeout(() => {
-            proveedores = data;
+        $.get("/proveedores", (data) => {
+            proveedores = data; // Guardamos los proveedores en una variable global
             renderProveedores();
-            console.log("Proveedores cargados:", proveedores);
-        }, 1000);
+        }).fail((error) => console.error("Error al obtener proveedores:", error));
     }
 
     function renderProveedores() {
         const sidebar = document.querySelector(".list-group");
         const searchInput = document.getElementById("searchProveedor");
-        sidebar.innerHTML = '<div class="input-group my-2">' +
-            '<span class="input-group-text"><i class="fas fa-search"></i></span>' +
-            '<input type="text" class="form-control" placeholder="Buscar" oninput="filterProveedores()" id="searchProveedor">' +
-            '</div>';
+
+        sidebar.innerHTML = `
+        <div class="input-group my-2">
+            <span class="input-group-text"><i class="fas fa-search"></i></span>
+            <input type="text" class="form-control" placeholder="Buscar" oninput="filterProveedores()" id="searchProveedor">
+        </div>`;
 
         let filtered = proveedores.filter(p => p.serviceType.toLowerCase() === selectedService);
         const query = searchInput?.value.toLowerCase() || "";
 
         if (query) {
-            filtered = filtered.filter(p =>
-                p.serviceName.toLowerCase().includes(query)
-            );
+            filtered = filtered.filter(p => p.serviceName.toLowerCase().includes(query));
         }
 
         if (filtered.length === 0) {
             const noResults = document.createElement("div");
-            noResults.classList.add("list-group-item");
+            noResults.classList.add("list-group-item", "no-results");
             noResults.textContent = "No se encontraron resultados";
             sidebar.appendChild(noResults);
         } else {
             filtered.forEach(proveedor => {
                 const btn = document.createElement("button");
                 btn.classList.add("list-group-item", "list-group-item-action");
-                btn.textContent = proveedor.serviceName;
+                btn.textContent = proveedor.serviceName; // Corregido: acceder a `proveedor` en vez de `data`
                 btn.addEventListener("click", () => loadMap(proveedor.location, proveedor.serviceName));
                 sidebar.appendChild(btn);
             });
@@ -208,19 +194,15 @@
         );
 
         const sidebar = document.querySelector(".list-group");
-        const buttons = sidebar.querySelectorAll("button.list-group-item-action");
-
-        buttons.forEach(button => {
+        sidebar.querySelectorAll("button.list-group-item-action").forEach(button => {
             const buttonText = button.textContent.toLowerCase();
-            if (buttonText.includes(query)) {
-                button.style.display = "block";
-            } else {
-                button.style.display = "none";
-            }
+            button.style.display = buttonText.includes(query) ? "block" : "none";
         });
 
-        // Si no hay botones visibles, muestra un mensaje
-        const visibleButtons = [...buttons].filter(b => b.style.display !== "none");
+        // Si no hay resultados visibles, mostrar mensaje
+        const visibleButtons = [...sidebar.querySelectorAll("button.list-group-item-action")]
+            .filter(b => b.style.display !== "none");
+
         let noResults = sidebar.querySelector(".no-results");
 
         if (visibleButtons.length === 0) {
@@ -238,19 +220,24 @@
     function loadMap(location, serviceName) {
         const mapContainer = document.querySelector(".card.bg-secondary");
         const servicioNombreElement = document.getElementById("servicioNombre");
-        servicioNombreElement.textContent = serviceName;
 
-        mapContainer.innerHTML = `<iframe width="100%" height="400" frameborder="0"
+        if (servicioNombreElement) {
+            servicioNombreElement.textContent = serviceName;
+        }
+
+        mapContainer.innerHTML = `
+        <iframe width="100%" height="400" frameborder="0"
         style="border:0"
         src="https://www.google.com/maps?q=${location}&output=embed"
-        allowfullscreen>
-        </iframe>
+        allowfullscreen></iframe>
         <h5 class="card-title mt-2">${serviceName}</h5>`;
     }
 
+    // Manejo de clicks en la barra de navegación para cambiar de servicio
     document.querySelectorAll(".navbar-brand").forEach(item => {
         item.addEventListener("click", (event) => {
             event.preventDefault();
+
             if (event.target.textContent.includes("Restaurantes")) {
                 selectedService = "restaurante";
             } else if (event.target.textContent.includes("Gimnasios")) {
@@ -258,6 +245,7 @@
             } else if (event.target.textContent.includes("Peluquerias")) {
                 selectedService = "peluqueria";
             }
+
             renderProveedores();
         });
     });
@@ -266,4 +254,5 @@
     document.addEventListener("DOMContentLoaded", () => {
         getProveedores();
     });
+
 </script>

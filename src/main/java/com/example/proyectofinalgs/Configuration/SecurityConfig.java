@@ -37,13 +37,13 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/register.html", "/registerdos.html", "/registertres.html", "/login","/registerForm", "/logout", "/error").permitAll()
-                        .requestMatchers("/home.html", "/user.html").hasRole("CLIENTE")
+                        .requestMatchers("/register.html", "/registerdos.html", "/registertres.html", "/login","/registerForm", "/logout", "/error", "/image/**").permitAll()
+                        .requestMatchers("/home", "/user.html").hasRole("CLIENTE")
                         .requestMatchers("/calendarioProveedor.html", "/userProveedor").hasRole("PROVEEDOR")
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/login")
-                        .defaultSuccessUrl("/home.html", true) // Redirige a "/home" tras login
+                        .defaultSuccessUrl("/home", true) // Redirige a "/home" tras login
                         .failureUrl("/login?error")
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(customOAuth2UserService))
@@ -65,8 +65,8 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(); // Codificador seguro de contraseñas
     }
-
-    private AuthenticationSuccessHandler oauth2SuccessHandler() {
+    @Bean
+    public AuthenticationSuccessHandler oauth2SuccessHandler() {
         return (request, response, authentication) -> {
             OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
             Map<String, Object> attributes = oauth2User.getAttributes();
@@ -80,7 +80,7 @@ public class SecurityConfig {
                 usuario = new Usuario();
                 usuario.setEmail(email);
                 usuario.setUsername(name != null ? name : "Usuario sin nombre");
-                usuario.setPassword(passwordEncoder().encode("default_password")); // Contraseña predeterminada
+                usuario.setPassword(passwordEncoder().encode("1")); // Contraseña predeterminada
                 userRepository.save(usuario); // Guarda el usuario con datos mínimos
                 response.sendRedirect("/register.html");
             } else {

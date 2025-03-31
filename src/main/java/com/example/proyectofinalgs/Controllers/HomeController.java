@@ -10,11 +10,7 @@ import java.io.IOException;
 @Controller
 public class HomeController {
 
-    @GetMapping("/home")
-    public void home(Model model, HttpServletResponse response) throws IOException {
-        model.addAttribute("title", "Home Usuario");
-        response.sendRedirect("/home.html");
-    }
+
 
 
 
