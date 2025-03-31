@@ -12,7 +12,7 @@ public class Authorities {
 
     @ManyToOne
     @JoinColumn(name = "username", nullable = false)
-    private User user;
+    private Usuario usuario;
 
     @Column(nullable = false)
     private String authority;
@@ -25,12 +25,12 @@ public class Authorities {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public Usuario getUser() {
+        return usuario;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public String getAuthority() {

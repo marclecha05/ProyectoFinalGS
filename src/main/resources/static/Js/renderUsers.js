@@ -1,5 +1,5 @@
 // Definimos un array vacío para almacenar los usuarios
-let users = [];
+/*let users = [];
 
 // Llamamos a la función getUsers para cargar los usuarios
 getUsers();
@@ -50,4 +50,4 @@ function selectUser(user) {
 // Evento para filtrar los usuarios por nombre
 document.getElementById("searchUser").addEventListener("input", (e) => {
     renderUsers(e.target.value);
-});
+});*/

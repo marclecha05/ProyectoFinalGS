@@ -1,9 +1,9 @@
 package com.example.proyectofinalgs.Repositories;
 
-import com.example.proyectofinalgs.Entities.User;
+import com.example.proyectofinalgs.Entities.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends JpaRepository<User, String> {
-    User findByEmail(String email);
-    User findByUsername(String username);
+public interface UserRepository extends JpaRepository<Usuario, String> {
+    Usuario findByEmail(String email);
+    Usuario findByUsername(String username);
 }

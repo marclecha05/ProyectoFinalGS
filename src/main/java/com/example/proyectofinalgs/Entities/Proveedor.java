@@ -5,14 +5,15 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-public class Provider {
+@Table(name = "Proveedor")
+public class Proveedor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @OneToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "usuario", nullable = false)
+    private Usuario usuario;
 
     @Column(nullable = false)
     private String serviceName;
@@ -22,7 +23,7 @@ public class Provider {
     private String durationTurn;
     private String calendarId;
 
-    @OneToMany(mappedBy = "provider", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "proveedor", cascade = CascadeType.ALL)
     private List<Reserva> reservas;
 
     public int getId() {
@@ -65,12 +66,12 @@ public class Provider {
         this.durationTurn = durationTurn;
     }
 
-    public User getUser() {
-        return user;
+    public Usuario getUser() {
+        return usuario;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public String getDescription() {

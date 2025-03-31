@@ -1,5 +1,5 @@
 // Se ejecuta una función cuando el documento HTML ha sido cargado y está listo para ser manipulado
-$(document).ready(function () {
+/*$(document).ready(function () {
     // Se realiza una solicitud AJAX a la URL "/user"
     $.ajax({
         url: "/user",
@@ -25,4 +25,4 @@ $(document).ready(function () {
             // Se ejecuta si la solicitud AJAX ha fallado
             console.error("Error en la solicitud:", jqXHR.responseText);
         });
-})
+})*/

@@ -1,6 +1,6 @@
 package com.example.proyectofinalgs.Configuration;
 
-import com.example.proyectofinalgs.Entities.User;
+import com.example.proyectofinalgs.Entities.Usuario;
 import com.example.proyectofinalgs.Repositories.UserRepository;
 import com.example.proyectofinalgs.Services.CustomOAuth2UserService;
 import com.example.proyectofinalgs.Services.EmailService;
@@ -15,7 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import jakarta.mail.MessagingException;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -38,9 +37,9 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/register.html", "/registerdos.html", "/registertres.html", "/login","/registerForm", "/logout", "/error.html").permitAll()
-                        .requestMatchers("/home.html", "/user.html").hasRole("USUARIO_ROL")
-                        .requestMatchers("/calendarioProveedor.html", "/userProveedor").hasRole("PROVEEDOR_LABORAL")
+                        .requestMatchers("/register.html", "/registerdos.html", "/registertres.html", "/login","/registerForm", "/logout", "/error").permitAll()
+                        .requestMatchers("/home.html", "/user.html").hasRole("CLIENTE")
+                        .requestMatchers("/calendarioProveedor.html", "/userProveedor").hasRole("PROVEEDOR")
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/login")
@@ -76,18 +75,18 @@ public class SecurityConfig {
             String name = (String) attributes.get("name");
 
             // Busca o crea el usuario en la base de datos
-            User user = userRepository.findByEmail(email);
-            if (user == null) {
-                user = new User();
-                user.setEmail(email);
-                user.setUsername(name != null ? name : "Usuario sin nombre");
-                user.setPassword(passwordEncoder().encode("default_password")); // Contraseña predeterminada
-                userRepository.save(user); // Guarda el usuario con datos mínimos
+            Usuario usuario = userRepository.findByEmail(email);
+            if (usuario == null) {
+                usuario = new Usuario();
+                usuario.setEmail(email);
+                usuario.setUsername(name != null ? name : "Usuario sin nombre");
+                usuario.setPassword(passwordEncoder().encode("default_password")); // Contraseña predeterminada
+                userRepository.save(usuario); // Guarda el usuario con datos mínimos
                 response.sendRedirect("/register.html");
             } else {
-                switch (user.getRol()) {
-                    case "USUARIO_ROL" -> response.sendRedirect("/home.html");
-                    case "PROVEEDOR_LABORAL" -> response.sendRedirect("/calendarioempresa.html");
+                switch (usuario.getRol()) {
+                    case "CLIENTE" -> response.sendRedirect("/home.html");
+                    case "PROVEEDOR" -> response.sendRedirect("/calendarioempresa.html");
                     default -> response.sendRedirect("/register.html");
                 }
             }

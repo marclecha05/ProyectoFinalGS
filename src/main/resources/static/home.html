@@ -56,7 +56,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="calendarioUser.html">Calendario</a>
+                        <a class="nav-link" href="calendario.html">Calendario</a>
                     </li>
 
                     <li class="nav-item">
@@ -64,11 +64,11 @@
                     </li>
 
                     <li class="navbar-toggler">
-                        <a class="nav-link" href="user.html">Perfil</a>
+                        <a class="nav-link" href="usuario.html">Perfil</a>
                     </li>
 
                 </ul>
-                <i class="fas fa-user-circle fs-3"></i>
+                <i class="fas fa-usuario-circle fs-3"></i>
 
                 <hr class="d-md-none text-white-50">
 
@@ -88,7 +88,7 @@
                 <!--boton Informacion -->
 
                 <form class="d-flex">
-                    <a class="btn btn-outline-secondary d-none d-md-inline-block " type="submit" href="user.html">Perfil</a>
+                    <a class="btn btn-outline-secondary d-none d-md-inline-block " type="submit" href="usuario.html">Perfil</a>
                 </form>
 
 
@@ -103,6 +103,13 @@
     <a href="#" class="navbar-brand text-white">
         <i class="fas fa-hamburger"></i> Restaurantes
     </a>
+    <a href="#" class="navbar-brand text-white">
+        <i class="fas fa-hamburger"></i> Gimnasios
+    </a>
+    <a href="#" class="navbar-brand text-white">
+        <i class="fas fa-hamburger"></i> Peluquerias
+    </a>
+
 </nav>
 
 <!-- Sidebar y contenido -->
@@ -112,20 +119,17 @@
         <div class="col-md-3">
             <div class="list-group">
                 <div class="input-group my-2">
-                    <span class="input-group-text"><i class="fas fa-search"></i></span>
-                    <input type="text" class="form-control" placeholder="Buscar">
+                    <input type="text" id="searchProveedor" class="form-control" placeholder="Buscar...">
+                    <div id="proveedorList" class="border p-2 mt-2" style="max-height: 200px; overflow-y: auto;"></div>
                 </div>
-                <button class="list-group-item list-group-item-action">Restaurante 1</button>
-                <button class="list-group-item list-group-item-action">Restaurante 2</button>
-                <button class="list-group-item list-group-item-action">Restaurante 3</button>
             </div>
         </div>
 
         <!-- Panel derecho -->
         <div class="col-md-9">
             <div class="card p-3">
-                <h5 class="card-title">Restaurante 1</h5>
-                <div class="card bg-secondary text-white text-center p-5">
+                <h5 id="servicioNombre" class="card-title">Seleccione un servicio</h5>
+                <div id="selectProveedor" class="card bg-secondary text-white text-center p-5">
                     MAPA
                 </div>
             </div>
@@ -136,3 +140,130 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+<script>
+    let proveedores = [];
+    let selectedService = "restaurante";
+    const data = [
+        { serviceName: "Fontanela", serviceType: "restaurante", location: "39.96252161264249, -0.26458602630444156" },
+        { serviceName: "come y callar", serviceType: "restaurante", location: "34.052235,-118.243683" },
+        { serviceName: "Gimnasio X", serviceType: "gimnasio", location: "51.507351,-0.127758" },
+        { serviceName: "trim", serviceType: "gimnasio", location: "48.856613,2.352222" },
+        { serviceName: "Peluquería 1", serviceType: "peluqueria", location: "41.902782,12.496366" },
+        { serviceName: "ferris", serviceType: "peluqueria", location: "35.689487,139.691711" }
+    ];
+
+    function getProveedores() {
+        /* $.get("/proveedores", (data) => {
+             proveedores = data;
+             renderProveedores();
+         })
+             .fail((error) => console.error("Error al obtener proveedores:", error));*/
+        setTimeout(() => {
+            proveedores = data;
+            renderProveedores();
+            console.log("Proveedores cargados:", proveedores);
+        }, 1000);
+    }
+
+    function renderProveedores() {
+        const sidebar = document.querySelector(".list-group");
+        const searchInput = document.getElementById("searchProveedor");
+        sidebar.innerHTML = '<div class="input-group my-2">' +
+            '<span class="input-group-text"><i class="fas fa-search"></i></span>' +
+            '<input type="text" class="form-control" placeholder="Buscar" oninput="filterProveedores()" id="searchProveedor">' +
+            '</div>';
+
+        let filtered = proveedores.filter(p => p.serviceType.toLowerCase() === selectedService);
+        const query = searchInput?.value.toLowerCase() || "";
+
+        if (query) {
+            filtered = filtered.filter(p =>
+                p.serviceName.toLowerCase().includes(query)
+            );
+        }
+
+        if (filtered.length === 0) {
+            const noResults = document.createElement("div");
+            noResults.classList.add("list-group-item");
+            noResults.textContent = "No se encontraron resultados";
+            sidebar.appendChild(noResults);
+        } else {
+            filtered.forEach(proveedor => {
+                const btn = document.createElement("button");
+                btn.classList.add("list-group-item", "list-group-item-action");
+                btn.textContent = proveedor.serviceName;
+                btn.addEventListener("click", () => loadMap(proveedor.location, proveedor.serviceName));
+                sidebar.appendChild(btn);
+            });
+        }
+    }
+
+    function filterProveedores() {
+        const searchInput = document.getElementById("searchProveedor");
+        const query = searchInput.value.toLowerCase();
+
+        const filtered = proveedores.filter(p =>
+            p.serviceType.toLowerCase() === selectedService &&
+            p.serviceName.toLowerCase().includes(query)
+        );
+
+        const sidebar = document.querySelector(".list-group");
+        const buttons = sidebar.querySelectorAll("button.list-group-item-action");
+
+        buttons.forEach(button => {
+            const buttonText = button.textContent.toLowerCase();
+            if (buttonText.includes(query)) {
+                button.style.display = "block";
+            } else {
+                button.style.display = "none";
+            }
+        });
+
+        // Si no hay botones visibles, muestra un mensaje
+        const visibleButtons = [...buttons].filter(b => b.style.display !== "none");
+        let noResults = sidebar.querySelector(".no-results");
+
+        if (visibleButtons.length === 0) {
+            if (!noResults) {
+                noResults = document.createElement("div");
+                noResults.classList.add("list-group-item", "no-results");
+                noResults.textContent = "No se encontraron resultados";
+                sidebar.appendChild(noResults);
+            }
+        } else if (noResults) {
+            noResults.remove();
+        }
+    }
+
+    function loadMap(location, serviceName) {
+        const mapContainer = document.querySelector(".card.bg-secondary");
+        const servicioNombreElement = document.getElementById("servicioNombre");
+        servicioNombreElement.textContent = serviceName;
+
+        mapContainer.innerHTML = `<iframe width="100%" height="400" frameborder="0"
+        style="border:0"
+        src="https://www.google.com/maps?q=${location}&output=embed"
+        allowfullscreen>
+        </iframe>
+        <h5 class="card-title mt-2">${serviceName}</h5>`;
+    }
+
+    document.querySelectorAll(".navbar-brand").forEach(item => {
+        item.addEventListener("click", (event) => {
+            event.preventDefault();
+            if (event.target.textContent.includes("Restaurantes")) {
+                selectedService = "restaurante";
+            } else if (event.target.textContent.includes("Gimnasios")) {
+                selectedService = "gimnasio";
+            } else if (event.target.textContent.includes("Peluquerias")) {
+                selectedService = "peluqueria";
+            }
+            renderProveedores();
+        });
+    });
+
+    // Inicialización
+    document.addEventListener("DOMContentLoaded", () => {
+        getProveedores();
+    });
+</script>

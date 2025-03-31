@@ -3,6 +3,7 @@ package com.example.proyectofinalgs.Entities;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "Reserva")
 public class Reserva {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,7 +15,7 @@ public class Reserva {
 
     @ManyToOne
     @JoinColumn(name = "provider_id", nullable = false)
-    private Provider provider;
+    private Proveedor proveedor;
 
     private String calendarEventId;
 
@@ -42,12 +43,12 @@ public class Reserva {
         this.cliente = cliente;
     }
 
-    public Provider getProvider() {
-        return provider;
+    public Proveedor getProvider() {
+        return proveedor;
     }
 
-    public void setProvider(Provider provider) {
-        this.provider = provider;
+    public void setProvider(Proveedor proveedor) {
+        this.proveedor = proveedor;
     }
 
     public int getCliente_id() {

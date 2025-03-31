@@ -1,6 +1,6 @@
 package com.example.proyectofinalgs.Services;
 
-import com.example.proyectofinalgs.Entities.User;
+import com.example.proyectofinalgs.Entities.Usuario;
 import com.example.proyectofinalgs.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,11 +20,11 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User saveUser(User user) {
-        return userRepository.save(user); // Guarda el usuario en la base de datos
+    public Usuario saveUser(Usuario usuario) {
+        return userRepository.save(usuario); // Guarda el usuario en la base de datos
     }
 
-    public List<User> findAll() {
+    public List<Usuario> findAll() {
         return userRepository.findAll(); // Recupera todos los usuarios
     }
 
@@ -36,11 +36,11 @@ public class UserService {
         return passwordEncoder.matches(rawPassword, encodedPassword); // Valida contraseñas
     }
 
-    public User findByUsername(String username) {
+    public Usuario findByUsername(String username) {
         return userRepository.findByUsername(username); // Ajusta según la lógica de tu repositorio
     }
 
-    public User findByEmail(String email) {
+    public Usuario findByEmail(String email) {
         return userRepository.findByEmail(email); // Encuentra usuario por correo
     }
 }

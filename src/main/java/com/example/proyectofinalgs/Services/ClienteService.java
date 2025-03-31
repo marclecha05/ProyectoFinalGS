@@ -1,6 +1,7 @@
 package com.example.proyectofinalgs.Services;
 
 import com.example.proyectofinalgs.Entities.Cliente;
+import com.example.proyectofinalgs.Entities.Usuario;
 import com.example.proyectofinalgs.Repositories.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ public class ClienteService {
     public Optional<Cliente> findById(Integer id) {
         return clienteRepository.findById(id);
     }
+    public List<Cliente> findByUsuario(Usuario usuario) {return clienteRepository.findByUsuario(usuario);  }
     public Cliente save(Cliente cliente) {
         return clienteRepository.save(cliente);
     }

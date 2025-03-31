@@ -1,6 +1,6 @@
 package com.example.proyectofinalgs.Controllers;
 
-import com.example.proyectofinalgs.Entities.User;
+import com.example.proyectofinalgs.Entities.Usuario;
 import com.example.proyectofinalgs.Repositories.UserRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,11 +17,11 @@ public class RegistertresController {
     public String procesarTerceraEtapa(@RequestParam String respuesta, Authentication authentication) {
         // Procesa la respuesta
         String email = authentication.getName();
-        User user = userRepository.findByEmail(email);
+        Usuario usuario = userRepository.findByEmail(email);
         String sitioWeb = "";
-        if (user.getRol().equals("ROLE_PROVEEDOR_AMBOS")) {
+        if (usuario.getRol().equals("ROLE_PROVEEDOR_AMBOS")) {
             sitioWeb = "homeAmbos";
-        } else if (user.getRol().equals("ROLE_PROVEEDOR_LABORAL")) {
+        } else if (usuario.getRol().equals("ROLE_PROVEEDOR_LABORAL")) {
             sitioWeb="calendarioProveedor";
         }
         return "redirect:/" + sitioWeb;

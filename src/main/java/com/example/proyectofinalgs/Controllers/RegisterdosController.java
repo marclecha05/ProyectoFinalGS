@@ -1,10 +1,9 @@
 package com.example.proyectofinalgs.Controllers;
 
-import com.example.proyectofinalgs.Entities.Provider;
+import com.example.proyectofinalgs.Entities.Proveedor;
 import com.example.proyectofinalgs.Repositories.ProviderRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,14 +25,14 @@ public class RegisterdosController {
         RedirectAttributes redirectAttributes, HttpServletResponse response ) throws IOException {
 
             // Crear un nuevo objeto Provider y asignar los valores del formulario
-            Provider provider = new Provider();
-            provider.setServiceName(serviceName);
-            provider.setServiceType(serviceType);
-            provider.setLocation(location);
-            provider.setDurationTurn(durationTurn);
+            Proveedor proveedor = new Proveedor();
+            proveedor.setServiceName(serviceName);
+            proveedor.setServiceType(serviceType);
+            proveedor.setLocation(location);
+            proveedor.setDurationTurn(durationTurn);
 
             // Guardar en la base de datos
-            providerRepository.save(provider);
+            providerRepository.save(proveedor);
 
             response.sendRedirect("/registertres.html");
         }

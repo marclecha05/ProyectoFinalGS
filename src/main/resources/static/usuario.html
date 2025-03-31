@@ -28,23 +28,87 @@
 
 <body class="bg-light" style="background-image: url(image/Fondo.jpeg); background-size: cover; background-position: center;">
 
-<!-- Navbar principal -->
-<nav class="navbar navbar-light bg-light px-3">
-    <span class="navbar-brand h1">Turnify</span>
-    <div>
-        <button class="btn btn-outline-dark">Servicios</button>
-        <button class="btn btn-outline-dark">Calendario</button>
-    </div>
-    <i class="fas fa-user-circle fs-3"></i>
-</nav>
+<header>
+    <!-- Inicio del menu -->
+    <nav class="navbar navbar-expand-md navbar-light bg-light px-3" id="navMenu">
+        <div class="container-fluid">
+            <!-- icono o nombre -->
+
+            <a class="navbar-brand" href="home.html">
+                <i class="bi bi-calendar2-week"></i>
+                <span class="navbar-brand h1">Turnify</span>
+            </a>
+
+            <!-- boton del menu -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- elementos del menu colapsable -->
+
+            <div class="collapse navbar-collapse" id="menu" >
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="home.html">Servicios</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="calendario.html">Calendario</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="toggle-theme">Modo Claro</a>
+                    </li>
+
+                    <li class="navbar-toggler">
+                        <a class="nav-link" href="usuario.html">Perfil</a>
+                    </li>
+
+                </ul>
+                <i class="fas fa-usuario-circle fs-3"></i>
+
+                <hr class="d-md-none text-white-50">
+
+                <!-- enlaces redes sociales -->
+
+                <ul class="navbar-nav flex-row flex-wrap text-light">
+
+                    <li class="nav-item col-6 col-md-auto p-3">
+                        <a class="text-black" href="https://github.com/marclecha05/ProyectoFinalGS.git">
+                            <i class="bi bi-github"></i>
+                            <small class="d-md-none ms-2">GitHub</small>
+                        </a>
+                    </li>
+
+                </ul>
+
+                <!--boton Informacion -->
+
+                <form class="d-flex">
+                    <a class="btn btn-outline-secondary d-none d-md-inline-block " type="submit" href="usuario.html">Perfil</a>
+                </form>
+
+
+            </div>
+
+        </div>
+    </nav>
+</header>
 
 <!-- Navbar secundaria -->
 <nav class="navbar navbar-dark bg-secondary px-3">
     <a href="#" class="navbar-brand text-white">
         <i class="fas fa-hamburger"></i> Restaurantes
     </a>
-</nav>
+    <a href="#" class="navbar-brand text-white">
+        <i class="fas fa-hamburger"></i> Gimnasios
+    </a>
+    <a href="#" class="navbar-brand text-white">
+        <i class="fas fa-hamburger"></i> Peluquerias
+    </a>
 
+</nav>
 <!-- Sidebar y contenido -->
 <div class="container-fluid mt-3">
     <div class="mt-3 py-5 d-flex flex-column align-items-center">

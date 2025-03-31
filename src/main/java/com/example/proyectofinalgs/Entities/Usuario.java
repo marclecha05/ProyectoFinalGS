@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import org.springframework.lang.NonNull;
 
 @Entity
-@Table(name = "users")
-public class User {
+@Table(name = "Usuario")
+public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -25,11 +25,11 @@ public class User {
     @Column(nullable = false)
     private boolean enabled;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "usuario",cascade = CascadeType.ALL)
     private Cliente cliente;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private Provider provider;
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private Proveedor proveedor;
 
     public int getId() {
         return id;
@@ -76,12 +76,12 @@ public class User {
         this.cliente = cliente;
     }
 
-    public Provider getProvider() {
-        return provider;
+    public Proveedor getProvider() {
+        return proveedor;
     }
 
-    public void setProvider(Provider provider) {
-        this.provider = provider;
+    public void setProvider(Proveedor proveedor) {
+        this.proveedor = proveedor;
     }
 
     public String getEmail() {
