@@ -20,7 +20,7 @@ public class CustomErrorController implements ErrorController {
         this.errorAttributes = errorAttributes;
     }
 
-   /* @RequestMapping("/error")
+    @RequestMapping("/error")
     public void handleError(HttpServletRequest request,HttpServletResponse response, Model model) throws IOException {
         // Obtén el código de estado HTTP directamente desde el request
         int statusCode = (int) request.getAttribute("jakarta.servlet.error.status_code");
@@ -30,5 +30,5 @@ public class CustomErrorController implements ErrorController {
         model.addAttribute("message", errorMessage != null ? errorMessage : "Error inesperado");
 
         response.sendRedirect("/error.html");
-    }*/
+    }
 }

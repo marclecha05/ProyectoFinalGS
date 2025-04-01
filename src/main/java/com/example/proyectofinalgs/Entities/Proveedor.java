@@ -14,8 +14,7 @@ public class Proveedor {
     @OneToOne
     @JoinColumn(name = "usuario", nullable = false)
     private Usuario usuario;
-
-    @Column(nullable = false)
+    private String nombre;
     private String serviceName;
     private String serviceType;
     private String description;
@@ -40,6 +39,22 @@ public class Proveedor {
 
     public void setServiceName(String serviceName) {
         this.serviceName = serviceName;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public String getServiceType() {

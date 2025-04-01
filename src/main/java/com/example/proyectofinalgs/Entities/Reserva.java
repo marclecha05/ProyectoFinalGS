@@ -2,6 +2,8 @@ package com.example.proyectofinalgs.Entities;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "Reserva")
 public class Reserva {
@@ -18,6 +20,9 @@ public class Reserva {
     private Proveedor proveedor;
 
     private String calendarEventId;
+    private String usuario; // Usuario que reserva
+    private LocalDateTime fecha;
+    private String detalle; // Información adicional de la reserva
 
     public int getId() {
         return id;
