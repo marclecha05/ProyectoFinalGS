@@ -16,7 +16,7 @@ public class ProveedorController {
         this.proveedorService = proveedorService;
     }
     @GetMapping("/proveedores")
-    List<Proveedor> getAllProveedores() {
+    List<Proveedor> findAll() {
         return proveedorService.findAll();
     }
 }

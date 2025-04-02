@@ -21,6 +21,16 @@ public class Proveedor {
     private String location;
     private String durationTurn;
     private String calendarId;
+    @OneToMany(mappedBy = "proveedor", cascade = CascadeType.ALL)
+    private List<Horario> horarios;
+
+    public List<Horario> getHorarios() {
+        return horarios;
+    }
+
+    public void setHorarios(List<Horario> horarios) {
+        this.horarios = horarios;
+    }
 
     @OneToMany(mappedBy = "proveedor", cascade = CascadeType.ALL)
     private List<Reserva> reservas;
