@@ -19,4 +19,5 @@ public class ProveedorController {
     List<Proveedor> findAll() {
         return proveedorService.findAll();
     }
+
 }

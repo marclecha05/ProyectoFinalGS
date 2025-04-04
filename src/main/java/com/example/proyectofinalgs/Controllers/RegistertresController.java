@@ -1,29 +1,53 @@
 package com.example.proyectofinalgs.Controllers;
 
-import com.example.proyectofinalgs.Entities.Usuario;
-import com.example.proyectofinalgs.Repositories.UserRepository;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import com.example.proyectofinalgs.Entities.Horario;
+import com.example.proyectofinalgs.Entities.Proveedor;
+import com.example.proyectofinalgs.Repositories.HorarioRepository;
+import com.example.proyectofinalgs.Repositories.ProveedorRepository;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+
+@Controller // Usa @Controller para redirecciones
+@RequestMapping("/registrotresForm") // Asegúrate de que coincida con la acción del formulario
 public class RegistertresController {
-    private UserRepository userRepository; // Inyecta el repositorio de usuarios
-    @GetMapping("/registertres")
-    public String mostrarTerceraEtapaRegistro() {
-        return "registertres"; // Devuelve la vista del tercer formulario
-    }
-    @PostMapping("")
-    public String procesarTerceraEtapa(@RequestParam String respuesta, Authentication authentication) {
-        // Procesa la respuesta
-        String email = authentication.getName();
-        Usuario usuario = userRepository.findByEmail(email);
-        String sitioWeb = "";
-        if (usuario.getRol().equals("ROLE_PROVEEDOR_AMBOS")) {
-            sitioWeb = "homeAmbos";
-        } else if (usuario.getRol().equals("ROLE_PROVEEDOR_LABORAL")) {
-            sitioWeb="calendarioProveedor";
+
+    @Autowired
+    private ProveedorRepository proveedorRepository;
+
+    @Autowired
+    private HorarioRepository horarioRepository;
+
+    @PostMapping
+    public void registrarHorarios(
+            @RequestParam Map<String, String> allParams,
+            HttpServletResponse response,
+            HttpSession session) throws IOException {
+
+        Integer proveedorId = (Integer) session.getAttribute("proveedorId");
+        Proveedor proveedor = proveedorRepository.findById(proveedorId)
+                .orElseThrow(() -> new RuntimeException("Proveedor no encontrado"));
+
+        // Usa los mismos nombres que en el HTML (sin acentos para consistencia)
+        String[] dias = {"lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo"};
+
+        for (String dia : dias) {
+            Horario horario = new Horario();
+            horario.setDiaSemana(dia.substring(0, 1).toUpperCase() + dia.substring(1)); // Capitaliza la primera letra
+            horario.setAperturaManana(allParams.get(dia + "AperturaManana"));
+            horario.setCierreManana(allParams.get(dia + "CierreManana"));
+            horario.setAperturaTarde(allParams.get(dia + "AperturaTarde"));
+            horario.setCierreTarde(allParams.get(dia + "CierreTarde"));
+            horario.setProveedor(proveedor);
+            horarioRepository.save(horario);
         }
-        return "redirect:/" + sitioWeb;
+
+        response.sendRedirect("/calendarioProveedor.html");
     }
 }
