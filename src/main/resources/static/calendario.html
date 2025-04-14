@@ -170,15 +170,9 @@
         <!-- Sidebar -->
         <div class="col-md-9">
             <!-- Controles de autenticación -->
-            <div id="auth-container" class="text-center">
-                <div id="auth-status" class="auth-status unauthenticated">
-                    No autenticado
-                </div>
-                <button id="signin-button" style="display: block;">Iniciar sesión con Google</button>
-                <button id="signout-button" style="display: block;">Cerrar sesión</button>
-            </div>
-
+            <div id="auth-status" class="auth-status unauthenticated">No autenticado</div>
             <div id="calendar"></div>
+
         </div>
 
         <!-- Panel derecho -->
@@ -204,113 +198,5 @@
 <!-- Google API Script -->
 <script src="https://apis.google.com/js/api.js"></script>
 
-<script>
-    // Configuración de la API de Google
-    const CLIENT_ID = '813036393361-4e3ab0khvp709s26a9ug0nkv03708tqh.apps.googleusercontent.com';
-    const API_KEY = 'AIzaSyCoamXsvr7JzW4WOnsJwXgxTES0SLHo9Z0';
-    const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
-    const SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
-
-    // Elementos del DOM
-    let signinButton = document.getElementById('signin-button');
-    let signoutButton = document.getElementById('signout-button');
-    let authStatus = document.getElementById('auth-status');
-    let calendarEl = document.getElementById('calendar');
-    let calendar;
-
-    // Inicializar la API de Google
-    function handleClientLoad() {
-        gapi.load('client:auth2', initClient);
-    }
-
-    // Inicializar el cliente de Google
-    function initClient() {
-        gapi.client.init({
-            apiKey: API_KEY,
-            clientId: CLIENT_ID,
-            discoveryDocs: DISCOVERY_DOCS,
-            scope: SCOPES
-        }).then(() => {
-            // Escuchar cambios en el estado de autenticación
-            gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
-
-            // Manejar el estado inicial de autenticación
-            updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-
-            signinButton.onclick = handleAuthClick;
-            signoutButton.onclick = handleSignoutClick;
-        }).catch(error => {
-            console.error('Error al inicializar Google API:', error);
-        });
-    }
-
-    // Actualizar la interfaz según el estado de autenticación
-    function updateSigninStatus(isSignedIn) {
-        if (isSignedIn) {
-            signinButton.style.display = 'none';
-            signoutButton.style.display = 'block';
-            authStatus.textContent = 'Autenticado con Google';
-            authStatus.className = 'auth-status authenticated';
-
-            // Inicializar el calendario después de autenticar
-            initCalendar();
-        } else {
-            signinButton.style.display = 'block';
-            signoutButton.style.display = 'none';
-            authStatus.textContent = 'No autenticado';
-            authStatus.className = 'auth-status unauthenticated';
-
-            // Limpiar el calendario si existe
-            if (calendar) {
-                calendar.destroy();
-                calendar = null;
-            }
-        }
-    }
-
-    // Manejar el inicio de sesión
-    function handleAuthClick() {
-        gapi.auth2.getAuthInstance().signIn();
-    }
-
-    // Manejar el cierre de sesión
-    function handleSignoutClick() {
-        gapi.auth2.getAuthInstance().signOut();
-    }
-
-    // Inicializar FullCalendar
-    function initCalendar() {
-        calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay'
-            },
-            googleCalendarApiKey: API_KEY,
-            events: {
-                googleCalendarId: 'primary',
-                className: 'gcal-event' // Opcional: clase CSS para los eventos de Google
-            },
-            eventClick: function(arg) {
-                // Abrir el evento en Google Calendar
-                window.open(arg.event.url, '_blank');
-                arg.jsEvent.preventDefault();
-            },
-            loading: function(isLoading) {
-                if (isLoading) {
-                    // Mostrar carga
-                    document.getElementById('calendar').innerHTML = '<p>Cargando eventos...</p>';
-                }
-            },
-            locale: 'es' // Opcional: establecer idioma español
-        });
-
-        calendar.render();
-    }
-
-    // Cargar la API de Google cuando la página esté lista
-    document.addEventListener('DOMContentLoaded', handleClientLoad);
-</script>
 </body>
 </html>
