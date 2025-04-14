@@ -1,10 +1,316 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+    <meta charset="utf-8">
+    <title>Calendario</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jura:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <!-- FullCalendar CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Estilo mínimo necesario -->
+    <style>
+        body {
+            font-family: Jura, serif;
+            background-color: #f8f5eb;
+            height: 100vh;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .jura-<uniquifier > {
+                   font-family: "Jura", sans-serif;
+                   font-optical-sizing: auto;
+                   font-weight: 33;
+                   font-style: normal;
+               }
+        #calendar {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        #signin-button {
+            margin: 10px;
+            padding: 8px 16px;
+            background-color: #4285F4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #signout-button {
+            margin: 10px;
+            padding: 8px 16px;
+            background-color: #EA4335;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .auth-status {
+            padding: 10px;
+            margin: 10px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .authenticated {
+            background-color: #E6F4EA;
+            color: #0D652D;
+        }
+
+        .unauthenticated {
+            background-color: #FCE8E6;
+            color: #C5221F;
+        }
+    </style>
+</head>
+
+<body class="bg-light"
+      style="background-image: url(image/Fondo.jpeg); background-size: cover; background-position: center;">
+<!-- Header -->
+<header>
+    <!-- Inicio del menu -->
+    <nav class="navbar navbar-expand-md navbar-light bg-light px-3" style="background-color: #e7e7dc" id="navMenu">
+        <div class="container-fluid">
+            <!-- icono o nombre -->
+
+            <a class="navbar-brand" href="home.html">
+                <i class="bi bi-calendar2-week"></i>
+                <span class="navbar-brand h1">Turnify</span>
+            </a>
+
+            <!-- boton del menu -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- elementos del menu colapsable -->
+
+            <div class="collapse navbar-collapse" id="menu">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="home.html">Servicios</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="calendario.html">Calendario</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="toggle-theme">Modo Claro</a>
+                    </li>
+
+                    <li class="navbar-toggler">
+                        <a class="nav-link" href="usuario.html">Perfil</a>
+                    </li>
+
+                </ul>
+                <i class="fas fa-usuario-circle fs-3"></i>
+
+                <hr class="d-md-none text-white-50">
+
+                <!-- enlaces redes sociales -->
+
+                <ul class="navbar-nav flex-row flex-wrap text-light">
+
+                    <li class="nav-item col-6 col-md-auto p-3">
+                        <a class="text-black" href="https://github.com/marclecha05/ProyectoFinalGS.git">
+                            <i class="bi bi-github"></i>
+                            <small class="d-md-none ms-2">GitHub</small>
+                        </a>
+                    </li>
+
+                </ul>
+
+                <!--boton Informacion -->
+
+                <form class="d-flex">
+                    <a class="btn btn-outline-secondary d-none d-md-inline-block " type="submit" href="usuario.html">Perfil</a>
+                </form>
+
+            </div>
+        </div>
+    </nav>
+</header>
+
+<!-- Navbar secundaria -->
+<nav class="navbar navbar-dark bg-secondary px-3">
+    <a href="#" class="navbar-brand text-white">
+        <i class="fas fa-hamburger"></i> Restaurantes
+    </a>
+    <a href="#" class="navbar-brand text-white">
+        <i class="fas fa-hamburger"></i> Gimnasios
+    </a>
+    <a href="#" class="navbar-brand text-white">
+        <i class="fas fa-hamburger"></i> Peluquerias
+    </a>
+</nav>
+
+<div class="container-fluid mt-3">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-9">
+            <!-- Controles de autenticación -->
+            <div id="auth-container" class="text-center">
+                <div id="auth-status" class="auth-status unauthenticated">
+                    No autenticado
+                </div>
+                <button id="signin-button" style="display: block;">Iniciar sesión con Google</button>
+                <button id="signout-button" style="display: block;">Cerrar sesión</button>
+            </div>
+
+            <div id="calendar"></div>
+        </div>
+
+        <!-- Panel derecho -->
+        <div class="col-md-3">
+            <div class="card p-3" style="background-color: #e7e7dc">
+                <h5 id="servicioNombre" class="card-title">Seleccione un servicio</h5>
+                <div id="selectProveedor" class="card bg-secondary text-white text-center p-5">
+                    MAPA
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Moment.js -->
+<script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+<!-- FullCalendar JS -->
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+<!-- Google Calendar Plugin -->
+<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/google-calendar@6.1.8/index.global.min.js"></script>
+<!-- Google API Script -->
+<script src="https://apis.google.com/js/api.js"></script>
+
+<script>
+    // Configuración de la API de Google
+    const CLIENT_ID = '813036393361-4e3ab0khvp709s26a9ug0nkv03708tqh.apps.googleusercontent.com';
+    const API_KEY = 'AIzaSyCoamXsvr7JzW4WOnsJwXgxTES0SLHo9Z0';
+    const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
+    const SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
+
+    // Elementos del DOM
+    let signinButton = document.getElementById('signin-button');
+    let signoutButton = document.getElementById('signout-button');
+    let authStatus = document.getElementById('auth-status');
+    let calendarEl = document.getElementById('calendar');
+    let calendar;
+
+    // Inicializar la API de Google
+    function handleClientLoad() {
+        gapi.load('client:auth2', initClient);
+    }
+
+    // Inicializar el cliente de Google
+    function initClient() {
+        gapi.client.init({
+            apiKey: API_KEY,
+            clientId: CLIENT_ID,
+            discoveryDocs: DISCOVERY_DOCS,
+            scope: SCOPES
+        }).then(() => {
+            // Escuchar cambios en el estado de autenticación
+            gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+
+            // Manejar el estado inicial de autenticación
+            updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+
+            signinButton.onclick = handleAuthClick;
+            signoutButton.onclick = handleSignoutClick;
+        }).catch(error => {
+            console.error('Error al inicializar Google API:', error);
+        });
+    }
+
+    // Actualizar la interfaz según el estado de autenticación
+    function updateSigninStatus(isSignedIn) {
+        if (isSignedIn) {
+            signinButton.style.display = 'none';
+            signoutButton.style.display = 'block';
+            authStatus.textContent = 'Autenticado con Google';
+            authStatus.className = 'auth-status authenticated';
+
+            // Inicializar el calendario después de autenticar
+            initCalendar();
+        } else {
+            signinButton.style.display = 'block';
+            signoutButton.style.display = 'none';
+            authStatus.textContent = 'No autenticado';
+            authStatus.className = 'auth-status unauthenticated';
+
+            // Limpiar el calendario si existe
+            if (calendar) {
+                calendar.destroy();
+                calendar = null;
+            }
+        }
+    }
+
+    // Manejar el inicio de sesión
+    function handleAuthClick() {
+        gapi.auth2.getAuthInstance().signIn();
+    }
+
+    // Manejar el cierre de sesión
+    function handleSignoutClick() {
+        gapi.auth2.getAuthInstance().signOut();
+    }
+
+    // Inicializar FullCalendar
+    function initCalendar() {
+        calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            googleCalendarApiKey: API_KEY,
+            events: {
+                googleCalendarId: 'primary',
+                className: 'gcal-event' // Opcional: clase CSS para los eventos de Google
+            },
+            eventClick: function(arg) {
+                // Abrir el evento en Google Calendar
+                window.open(arg.event.url, '_blank');
+                arg.jsEvent.preventDefault();
+            },
+            loading: function(isLoading) {
+                if (isLoading) {
+                    // Mostrar carga
+                    document.getElementById('calendar').innerHTML = '<p>Cargando eventos...</p>';
+                }
+            },
+            locale: 'es' // Opcional: establecer idioma español
+        });
+
+        calendar.render();
+    }
+
+    // Cargar la API de Google cuando la página esté lista
+    document.addEventListener('DOMContentLoaded', handleClientLoad);
+</script>
 </body>
 </html>
