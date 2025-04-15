@@ -29,7 +29,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_PRIVATE_KEY }}
-          source: target/demo-0.0.1-SNAPSHOT.war
+          source: target/ROOT.war
           target: /home/ubuntu/
 
       - name: Deploy and configure environment on EC2
