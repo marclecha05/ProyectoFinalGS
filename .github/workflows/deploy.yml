@@ -59,10 +59,10 @@ jobs:
       - name: Configure environment variables and deploy
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_PRIVATE_KEY }}
-          script: |
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USERNAME }}
+        key: ${{ secrets.EC2_PRIVATE_KEY }}
+        script: |
           #Configurar variables de entorno en el archivo /etc/environment para persistencia.
             echo "export DB_ENDPOINT=${{ secrets.DB_ENDPOINT }}" | sudo tee -a /etc/environment
             echo "export DB_USERNAME=${{ secrets.DB_USERNAME }}" | sudo tee -a /etc/environment
