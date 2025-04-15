@@ -59,27 +59,22 @@ jobs:
       - name: Configure environment variables and deploy
         uses: appleboy/ssh-action@master
         with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ${{ secrets.EC2_USERNAME }}
-        key: ${{ secrets.EC2_PRIVATE_KEY }}
-        script: |
-          #Configurar variables de entorno en el archivo /etc/environment para persistencia.
-            echo "export DB_ENDPOINT=${{ secrets.DB_ENDPOINT }}" | sudo tee -a /etc/environment
-            echo "export DB_USERNAME=${{ secrets.DB_USERNAME }}" | sudo tee -a /etc/environment
-            echo "export DB_PASSWORD=${{ secrets.DB_PASSWORD }}" | sudo tee -a /etc/environment
-            
-          #Recargar las variables de entorno en la sesión actual.
-            source /etc/environment
-
-
-          #Mover el archivo .war a la carpeta de despliegue de Tomcat.
-            sudo mv /home/ubuntu/demo-0.0.1-SNAPSHOT.war /var/lib/tomcat10/webapps/demo.war  
-
-
-          #Cambiar el propietario y permisos del archivo para que Tomcat pueda acceder.
-            sudo chown tomcat:tomcat /var/lib/tomcat10/webapps/demo.war  
-            sudo chmod 755 /var/lib/tomcat10/webapps/demo.war 
-
-
-          #Reiniciar el servicio Tomcat para cargar el nuevo archivo .war.
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+          script: |
+            sudo rm -r /var/lib/tomcat10/webapps/ROOT.war
+            sudo rm -r /var/lib/tomcat10/webapps/ROOT
+            sudo mv /home/ubuntu/demo-0.0.1-SNAPSHOT.war /var/lib/tomcat10/webapps/ROOT.war  
+            sudo chown tomcat:tomcat /var/lib/tomcat10/webapps/ROOT.war  
+            sudo chmod 755 /var/lib/tomcat10/webapps/ROOT.war 
+            echo 'export SPRING_MAIL_PASSWORD="${{ secrets.EMAIL_PASSWORD }}"' | sudo tee -a /etc/default/tomcat10
+            echo 'SPRING_MAIL_PASSWORD="${{ secrets.EMAIL_PASSWORD }}"' | sudo tee -a /etc/environment
+            echo 'export SPRING_DATASOURCE_URL="${{ secrets.DB_URL }}"' | sudo tee -a /etc/default/tomcat10
+            echo 'export SPRING_DATASOURCE_USERNAME="${{ secrets.DB_USERNAME }}"' | sudo tee -a /etc/default/tomcat10
+            echo 'export SPRING_DATASOURCE_PASSWORD="${{ secrets.DB_PASSWORD }}"' | sudo tee -a /etc/default/tomcat10
+            echo 'SPRING_DATASOURCE_URL="${{ secrets.DB_URL }}"' | sudo tee -a /etc/environment
+            echo 'SPRING_DATASOURCE_USERNAME="${{ secrets.DB_USERNAME }}"' | sudo tee -a /etc/environment
+            echo 'SPRING_DATASOURCE_PASSWORD="${{ secrets.DB_PASSWORD }}"' | sudo tee -a /etc/environment
             sudo systemctl restart tomcat10
+
