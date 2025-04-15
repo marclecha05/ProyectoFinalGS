@@ -98,10 +98,7 @@
             </plugin>
         </plugins>
         <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
+            <!-- Filtra los archivos de recursos, excepto los archivos estáticos como imágenes -->
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
@@ -115,12 +112,13 @@
                     <exclude>**/*.ico</exclude>
                 </excludes>
             </resource>
+
+            <!-- No filtrar archivos estáticos, como imágenes -->
             <resource>
                 <directory>src/main/resources/static</directory>
                 <filtering>false</filtering>
             </resource>
         </resources>
-
     </build>
 
 
