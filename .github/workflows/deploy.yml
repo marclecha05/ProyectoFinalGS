@@ -44,13 +44,13 @@ jobs:
             sudo rm -rf /var/lib/tomcat10/webapps/ROOT
 
             # Mover nuevo WAR y asignar permisos
-            sudo mv /home/ubuntu/demo-0.0.1-SNAPSHOT.war /var/lib/tomcat10/webapps/ROOT.war
+            sudo mv /home/ubuntu/ROOT.war /var/lib/tomcat10/webapps/ROOT.war
             sudo chown tomcat:tomcat /var/lib/tomcat10/webapps/ROOT.war
             sudo chmod 755 /var/lib/tomcat10/webapps/ROOT.war
 
             # Configurar variables de entorno (se aplican al reiniciar Tomcat)
             echo 'SPRING_MAIL_PASSWORD=${{ secrets.EMAIL_PASSWORD }}' | sudo tee /etc/environment
-            echo 'SPRING_DATASOURCE_URL=${{ secrets.DB_URL }}' | sudo tee -a /etc/environment
+            echo 'SPRING_DATASOURCE_ENDPOINT=${{ secrets.DB_ENDPOINT }}' | sudo tee -a /etc/environment
             echo 'SPRING_DATASOURCE_USERNAME=${{ secrets.DB_USERNAME }}' | sudo tee -a /etc/environment
             echo 'SPRING_DATASOURCE_PASSWORD=${{ secrets.DB_PASSWORD }}' | sudo tee -a /etc/environment
 
