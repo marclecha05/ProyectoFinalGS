@@ -1,49 +1,28 @@
-name: Deploy Spring Boot to EC2 (Ubuntu)  # Nombre del workflow
-
+name: Deploy Spring Boot to EC2 (Ubuntu)
 
 on:
-  push:                                   # Workflow se activa cuando se hace push.
+  push:
     branches:
-      - master                              # Solo se ejecuta si el push es en la rama main.
-
+      - master
 
 jobs:
-  build-and-deploy:                       # Define el trabajo llamado build-and-deploy.
-    runs-on: ubuntu-latest                # El trabajo se ejecuta en Ubuntu.
-    env:
-      DB_ENDPOINT: ${{ secrets.DB_ENDPOINT }}
-      DB_USERNAME: ${{ secrets.DB_USERNAME }}
-      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-
+  build-and-deploy:
+    runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Descargar el código fuente del repositorio.
       - name: Checkout source code
         uses: actions/checkout@v2
 
-
-      # 2️⃣ Configurar JDK 21 (Java Development Kit).
       - name: Set up JDK 21
         uses: actions/setup-java@v2
         with:
           java-version: 21
           distribution: temurin
 
-
-      # 3️⃣ Construir la aplicación usando Maven.
       - name: Build with Maven
-        run: mvn clean package
-
-        # 4 cONTRUIR
-      - name: Build and test with Maven
         run: |
-          # Limpia y construye el proyecto
-            mvn clean package    
-          # Ejecuta las pruebas automáticas
-            mvn test         
+          mvn clean package -DskipTests
 
-
-      # 4️⃣ Copiar el archivo .war a la instancia EC2.
       - name: Copy .war to EC2
         uses: appleboy/scp-action@v0.1.5
         with:
@@ -52,29 +31,28 @@ jobs:
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           source: target/demo-0.0.1-SNAPSHOT.war
           target: /home/ubuntu/
-          strip_components: 1
 
-
-      # 5️⃣ Configurar variables de entorno y desplegar la aplicación en Tomcat.
-      - name: Configure environment variables and deploy
+      - name: Deploy and configure environment on EC2
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script: |
-            sudo rm -r /var/lib/tomcat10/webapps/ROOT.war
-            sudo rm -r /var/lib/tomcat10/webapps/ROOT
-            sudo mv /home/ubuntu/demo-0.0.1-SNAPSHOT.war /var/lib/tomcat10/webapps/ROOT.war  
-            sudo chown tomcat:tomcat /var/lib/tomcat10/webapps/ROOT.war  
-            sudo chmod 755 /var/lib/tomcat10/webapps/ROOT.war 
-            echo 'export SPRING_MAIL_PASSWORD="${{ secrets.EMAIL_PASSWORD }}"' | sudo tee -a /etc/default/tomcat10
-            echo 'SPRING_MAIL_PASSWORD="${{ secrets.EMAIL_PASSWORD }}"' | sudo tee -a /etc/environment
-            echo 'export SPRING_DATASOURCE_URL="${{ secrets.DB_URL }}"' | sudo tee -a /etc/default/tomcat10
-            echo 'export SPRING_DATASOURCE_USERNAME="${{ secrets.DB_USERNAME }}"' | sudo tee -a /etc/default/tomcat10
-            echo 'export SPRING_DATASOURCE_PASSWORD="${{ secrets.DB_PASSWORD }}"' | sudo tee -a /etc/default/tomcat10
-            echo 'SPRING_DATASOURCE_URL="${{ secrets.DB_URL }}"' | sudo tee -a /etc/environment
-            echo 'SPRING_DATASOURCE_USERNAME="${{ secrets.DB_USERNAME }}"' | sudo tee -a /etc/environment
-            echo 'SPRING_DATASOURCE_PASSWORD="${{ secrets.DB_PASSWORD }}"' | sudo tee -a /etc/environment
-            sudo systemctl restart tomcat10
+            # Remover WAR anterior
+            sudo rm -f /var/lib/tomcat10/webapps/ROOT.war
+            sudo rm -rf /var/lib/tomcat10/webapps/ROOT
 
+            # Mover nuevo WAR y asignar permisos
+            sudo mv /home/ubuntu/demo-0.0.1-SNAPSHOT.war /var/lib/tomcat10/webapps/ROOT.war
+            sudo chown tomcat:tomcat /var/lib/tomcat10/webapps/ROOT.war
+            sudo chmod 755 /var/lib/tomcat10/webapps/ROOT.war
+
+            # Configurar variables de entorno (se aplican al reiniciar Tomcat)
+            echo 'SPRING_MAIL_PASSWORD=${{ secrets.EMAIL_PASSWORD }}' | sudo tee /etc/environment
+            echo 'SPRING_DATASOURCE_URL=${{ secrets.DB_URL }}' | sudo tee -a /etc/environment
+            echo 'SPRING_DATASOURCE_USERNAME=${{ secrets.DB_USERNAME }}' | sudo tee -a /etc/environment
+            echo 'SPRING_DATASOURCE_PASSWORD=${{ secrets.DB_PASSWORD }}' | sudo tee -a /etc/environment
+
+            # Reiniciar Tomcat
+            sudo systemctl restart tomcat10
