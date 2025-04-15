@@ -21,7 +21,7 @@ jobs:
 
       - name: Build with Maven
         run: |
-          mvn clean package -DskipTests
+          mvn clean install -DskipTests
 
       - name: Copy .war to EC2
         uses: appleboy/scp-action@v0.1.5
