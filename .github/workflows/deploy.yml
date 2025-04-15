@@ -1,0 +1,63 @@
+name: Deploy Spring Boot to EC2 (Ubuntu)  # Nombre del workflow
+
+
+on:
+  push:                                 # Workflow activa cuando se hace push.
+    branches:
+      - master                            # Solo se ejecuta si push en rama master
+
+
+jobs:
+  build-and-deploy:                     # Define trabajo llamado buildanddeploy
+    runs-on: ubuntu-latest              # El trabajo se ejecuta en Ubuntu
+
+
+    steps:
+      # 1️⃣ Descargar el código fuente del repositorio
+      - name: Checkout source code       # Nombre del paso.
+        uses: actions/checkout@v2        # Clonar el repositorio.
+
+
+      # 2️⃣ Configurar JDK 21 (Java Development Kit)
+      - name: Set up JDK 21             # Nombre del paso.
+        uses: actions/setup-java@v2     # Configurar el entorno Java.
+        with:
+          java-version: 21              # Especifica la versión de Java (21).
+          distribution: temurin         # Utiliza dist OpenJDK llamada Temurin.
+
+
+      # 3️⃣ Construir la aplicación usando Maven
+      - name: Build with Maven          # Nombre del paso.
+        run: mvn clean package          # Construir proyecto, generando .war.
+
+
+      # 4️⃣ Copiar el archivo .war a la instancia EC2
+      - name: Copy .war to EC2          # Nombre del paso.
+        uses: appleboy/scp-action@v0.1.5  # Copiar archivos a servidor remoto
+        with:
+          host: ${{ secrets.EC2_HOST }}    # Dirección IP de la instancia EC2
+          username: ${{ secrets.EC2_USERNAME }}  # Nombre usuario EC2
+          key: ${{ secrets.EC2_PRIVATE_KEY }}    # Clave privada SSH
+          source: target/demo-0.0.1-SNAPSHOT.war  # Ruta del archivo .war
+          target: /home/ubuntu/                   # Carpeta destino en EC2
+          strip_components: 1                     # Elimina directorios
+
+
+      # 5️⃣ Mover el archivo .war a la carpeta webapps de Tomcat y configurar permisos
+      - name: Move .war to Tomcat directory and set permissions
+        uses: appleboy/ssh-action@master        # Acción ssh-action
+        with:
+          host: ${{ secrets.EC2_HOST }}         # Dirección IP de EC2
+          username: ${{ secrets.EC2_USERNAME }} # Nombre de usuario de EC2
+          key: ${{ secrets.EC2_PRIVATE_KEY }}   # Clave privada SSH
+          script: |
+
+          #Mover el archivo .war a la carpeta de despliegue de Tomcat.
+            sudo mv /home/ubuntu/demo-0.0.1-SNAPSHOT.war /var/lib/tomcat10/webapps/demo.war  
+          #Cambiar el propietario del archivo a "tomcat" para que el servicio tenga acceso.
+            sudo chown tomcat:tomcat /var/lib/tomcat10/webapps/demo.war  
+          #Cambiar los permisos del archivo para que sea ejecutable.
+            sudo chmod 755 /var/lib/tomcat10/webapps/demo.war 
+            
+          #Reiniciar el servicio Tomcat para cargar el nuevo archivo .war.
+            sudo systemctl restart tomcat10
