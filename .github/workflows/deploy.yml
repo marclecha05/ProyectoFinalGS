@@ -34,6 +34,14 @@ jobs:
       - name: Build with Maven
         run: mvn clean package
 
+        # 4 cONTRUIR
+      - name: Build and test with Maven
+        run: |
+          # Limpia y construye el proyecto
+            mvn clean package    
+          # Ejecuta las pruebas automáticas
+            mvn test         
+
 
       # 4️⃣ Copiar el archivo .war a la instancia EC2.
       - name: Copy .war to EC2
