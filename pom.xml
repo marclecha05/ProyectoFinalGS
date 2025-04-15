@@ -102,7 +102,25 @@
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
             </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <excludes>
+                    <exclude>static/**</exclude>
+                    <exclude>**/*.webp</exclude>
+                    <exclude>**/*.png</exclude>
+                    <exclude>**/*.jpg</exclude>
+                    <exclude>**/*.jpeg</exclude>
+                    <exclude>**/*.gif</exclude>
+                    <exclude>**/*.ico</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>src/main/resources/static</directory>
+                <filtering>false</filtering>
+            </resource>
         </resources>
+
     </build>
 
 
