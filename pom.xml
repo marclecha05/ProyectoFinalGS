@@ -29,6 +29,8 @@
     <packaging>war</packaging>
     <properties>
         <java.version>21</java.version>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
     </properties>
     <dependencies>
         <dependency>
@@ -104,6 +106,7 @@
                 <configuration>
                     <source>21</source> <!-- Java version -->
                     <target>21</target>
+                    <release>21</release>
                 </configuration>
             </plugin>
         </plugins>
