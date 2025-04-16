@@ -22,9 +22,9 @@ jobs:
           distribution: temurin         # Utiliza dist OpenJDK llamada Temurin.
       - name: Set environment variables
         run: |
-          echo "SPRING_DATASOURCE_URL=${{ secrets.DB_ENDPOINT }}" >> $GITHUB_ENV
-          echo "SPRING_DATASOURCE_USERNAME=${{ secrets.DB_USERNAME }}" >> $GITHUB_ENV
-          echo "SPRING_DATASOURCE_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
+          echo "SPRING_DATASOURCE_URL=jdbc:mysql://basedatos1.ctouc2akatea.us-east-1.rds.amazonaws.com:3306/basedatos1" >> $GITHUB_ENV
+          echo "SPRING_DATASOURCE_USERNAME=admin" >> $GITHUB_ENV
+          echo "SPRING_DATASOURCE_PASSWORD=admin123" >> $GITHUB_ENV
 
 
       # 3️⃣ Construir la aplicación usando Maven
@@ -38,9 +38,36 @@ jobs:
       - name: Copy .war to EC2          # Nombre del paso.
         uses: appleboy/scp-action@v0.1.5  # Copiar archivos a servidor remoto
         with:
-          host: ${{ secrets.EC2_HOST }}    # Dirección IP de la instancia EC2
-          username: ${{ secrets.EC2_USERNAME }}  # Nombre usuario EC2
-          key: ${{ secrets.EC2_PRIVATE_KEY }}    # Clave privada SSH
+          host: 54.210.10.71    # Dirección IP de la instancia EC2
+          username: prueba1  # Nombre usuario EC2
+          key: |
+            -----BEGIN RSA PRIVATE KEY-----
+            MIIEowIBAAKCAQEArOXkdvV1LtXdULwGO/a4dOc099Vefrq+KRpxBte1RJXp6Ile
+            GbdCK+K+x4y2nEs1ZfGN5/Uyxc+3gZO1+Wa5FgXwf+gS6u926oN0Tgis9VK/Tidt
+            wD6qBw53NwGnDtCg/n9+vwn/pY7rrI1Iun7D9ElD6xmX3EwSt4eBJmFTESVf101M
+            iq3UinCxoV0O3tBg3mEGUgSEfrMz2d/QhOL/mhykykB4y1/2V/t5UITOogZYJAhK
+            gSJXGdidvyMdKfG9V0jxbKrRErDtB+dTFMf37MuA5jABfC6UuxAxo1yBv3ORLP6m
+            Nq26TyWF4ghKyTS+bXxf5W8+1TaUFs5b/CdInwIDAQABAoIBAQCisDNY6ECakGyO
+            gk4PcGlCvyftJ92hu9AhVxsRiDmtzq5pu5BK/FCMgPBpTnOp/27AfRm9MNDUp06R
+            486wXcM9ANu7T0E1xZwMsSLoJmuw72rJfHpeEdjliOwOW0S5wQAsWQWHdz4Rp7kF
+            BXBw48U5AROijdOCXCakgSG6XovOLeNlIu13ypc4fQFWNkb3tAilxalJM42/Jnjz
+            c8gCJkSsUcU76I2OtGWhuTILruVwLXsBMpDFRgtWqkX+K6Pz0kUbAABrMaBa2RoP
+            L+j65w7g9w++jdkANy4pLfDre3cqJi19skso387jkSHynELaYwJYYJomZqKmV7ex
+            6vPO1SW5AoGBAN0W+J7k/6r2J15TMwsRJ7ZeNN++Rx+VoGkmFw5rgVTIDQ2r6ueF
+            7x9PYhuGOmMvTX2LBoavMSODGgd5PMZMKoVITKkOUzeoAnYYfEvwmZa9I8uhNbYc
+            QrBbqnFRwJ1UgDH/X8PFpXKlxDuGzfzJnBergKUvnBNN2X05NZN9ZRrDAoGBAMgy
+            4qa4Q/zsTl2oaEWG+4M760+Tgg0YLojjLlj834lKvxofkW19aMB1SjbEqWfgr92S
+            RWT0X8P1+CJXWF0FVMVzoT4H6Uzjn9owKp6MpBIabfsc7WkaIwlp2I9bM3mwT0Vw
+            w9+cEK3WNLx7SrAkNiqYE2xFWHPP0cQzo4LoReT1AoGAAmG29+87mdng/rEiwaHD
+            rcFCDI7+MSbpfXh9kxgxYnptOZJ6i1f0BYBTbDx78ImX6hxPS7AjdWB6LU5vCyvS
+            4XCv8rpGxzi2HhORczf6T5dmBVGNRJL1XPT/1wysaIV6hA9eNruwVpXWkVWYbnq1
+            hcPBNQZYRhT2nNS68QXOywUCgYAc8M43D7g0XezOOUQpmOPPCuBvdoF8ZxyDCWRv
+            1M5zyGxr2FhrnY+BEvORi0h6Dc8elsCVYYZei7Y9MKdDezvP93E9yGL/jIBVSFVA
+            6k/llhCEFqBzayXZfIWj46lDVCuBfFW0g5kdqDOjc6dOY025Rpa4NiYdR9OpK1Xd
+            3LoN6QKBgBhdU0s0Lwhe7OpqBbA1S8ODBTORuAZsTzZbmuGKA0haVPvCGBgf+ucC
+            xKOVlA81xPjWAdP+G86IIcfBVidxKpKXkypAQPpXDj9YHlNDqSsRYJAuNEnnlR9x
+            uYlVJpVw6NjkVGsFspjB04LsD2Ms9WPVFZ+wum0pfODLyHG0vMZ4
+            -----END RSA PRIVATE KEY-----
           source: target/ProyectoFinalGS-0.0.1-SNAPSHOT.war  # Ruta del archivo .war
           target: /home/ubuntu/                   # Carpeta destino en EC2
           strip_components: 1                     # Elimina directorios
@@ -49,21 +76,48 @@ jobs:
       - name: Move .war to Tomcat directory and set permissions
         uses: appleboy/ssh-action@master        # Acción ssh-action
         with:
-          host: ${{ secrets.EC2_HOST }}         # Dirección IP de EC2
-          username: ${{ secrets.EC2_USERNAME }} # Nombre de usuario de EC2
-          key: ${{ secrets.EC2_PRIVATE_KEY }}   # Clave privada SSH
+          host: 54.210.10.71         # Dirección IP de EC2
+          username: prueba1 # Nombre de usuario de EC2
+          key: |
+            -----BEGIN RSA PRIVATE KEY-----
+            MIIEowIBAAKCAQEArOXkdvV1LtXdULwGO/a4dOc099Vefrq+KRpxBte1RJXp6Ile
+            GbdCK+K+x4y2nEs1ZfGN5/Uyxc+3gZO1+Wa5FgXwf+gS6u926oN0Tgis9VK/Tidt
+            wD6qBw53NwGnDtCg/n9+vwn/pY7rrI1Iun7D9ElD6xmX3EwSt4eBJmFTESVf101M
+            iq3UinCxoV0O3tBg3mEGUgSEfrMz2d/QhOL/mhykykB4y1/2V/t5UITOogZYJAhK
+            gSJXGdidvyMdKfG9V0jxbKrRErDtB+dTFMf37MuA5jABfC6UuxAxo1yBv3ORLP6m
+            Nq26TyWF4ghKyTS+bXxf5W8+1TaUFs5b/CdInwIDAQABAoIBAQCisDNY6ECakGyO
+            gk4PcGlCvyftJ92hu9AhVxsRiDmtzq5pu5BK/FCMgPBpTnOp/27AfRm9MNDUp06R
+            486wXcM9ANu7T0E1xZwMsSLoJmuw72rJfHpeEdjliOwOW0S5wQAsWQWHdz4Rp7kF
+            BXBw48U5AROijdOCXCakgSG6XovOLeNlIu13ypc4fQFWNkb3tAilxalJM42/Jnjz
+            c8gCJkSsUcU76I2OtGWhuTILruVwLXsBMpDFRgtWqkX+K6Pz0kUbAABrMaBa2RoP
+            L+j65w7g9w++jdkANy4pLfDre3cqJi19skso387jkSHynELaYwJYYJomZqKmV7ex
+            6vPO1SW5AoGBAN0W+J7k/6r2J15TMwsRJ7ZeNN++Rx+VoGkmFw5rgVTIDQ2r6ueF
+            7x9PYhuGOmMvTX2LBoavMSODGgd5PMZMKoVITKkOUzeoAnYYfEvwmZa9I8uhNbYc
+            QrBbqnFRwJ1UgDH/X8PFpXKlxDuGzfzJnBergKUvnBNN2X05NZN9ZRrDAoGBAMgy
+            4qa4Q/zsTl2oaEWG+4M760+Tgg0YLojjLlj834lKvxofkW19aMB1SjbEqWfgr92S
+            RWT0X8P1+CJXWF0FVMVzoT4H6Uzjn9owKp6MpBIabfsc7WkaIwlp2I9bM3mwT0Vw
+            w9+cEK3WNLx7SrAkNiqYE2xFWHPP0cQzo4LoReT1AoGAAmG29+87mdng/rEiwaHD
+            rcFCDI7+MSbpfXh9kxgxYnptOZJ6i1f0BYBTbDx78ImX6hxPS7AjdWB6LU5vCyvS
+            4XCv8rpGxzi2HhORczf6T5dmBVGNRJL1XPT/1wysaIV6hA9eNruwVpXWkVWYbnq1
+            hcPBNQZYRhT2nNS68QXOywUCgYAc8M43D7g0XezOOUQpmOPPCuBvdoF8ZxyDCWRv
+            1M5zyGxr2FhrnY+BEvORi0h6Dc8elsCVYYZei7Y9MKdDezvP93E9yGL/jIBVSFVA
+            6k/llhCEFqBzayXZfIWj46lDVCuBfFW0g5kdqDOjc6dOY025Rpa4NiYdR9OpK1Xd
+            3LoN6QKBgBhdU0s0Lwhe7OpqBbA1S8ODBTORuAZsTzZbmuGKA0haVPvCGBgf+ucC
+            xKOVlA81xPjWAdP+G86IIcfBVidxKpKXkypAQPpXDj9YHlNDqSsRYJAuNEnnlR9x
+            uYlVJpVw6NjkVGsFspjB04LsD2Ms9WPVFZ+wum0pfODLyHG0vMZ4
+            -----END RSA PRIVATE KEY-----
           script: |
             sudo rm -r /var/lib/tomcat10/webapps/ROOT.war
             sudo rm -r /var/lib/tomcat10/webapps/ROOT
             sudo mv /home/ubuntu/ProyectoFinalGS-0.0.1-SNAPSHOT.war /var/lib/tomcat10/webapps/ROOT.war  
             sudo chown tomcat:tomcat /var/lib/tomcat10/webapps/ROOT.war  
             sudo chmod 755 /var/lib/tomcat10/webapps/ROOT.war 
-            echo 'export SPRING_MAIL_PASSWORD="${{ secrets.EMAIL_PASSWORD }}"' | sudo tee -a /etc/default/tomcat10
-            echo 'SPRING_MAIL_PASSWORD="${{ secrets.EMAIL_PASSWORD }}"' | sudo tee -a /etc/environment
-            echo 'export SPRING_DATASOURCE_URL="${{ secrets.DB_ENDPOINT }}"' | sudo tee -a /etc/default/tomcat10
-            echo 'export SPRING_DATASOURCE_USERNAME="${{ secrets.DB_USERNAME }}"' | sudo tee -a /etc/default/tomcat10
-            echo 'export SPRING_DATASOURCE_PASSWORD="${{ secrets.DB_PASSWORD }}"' | sudo tee -a /etc/default/tomcat10
-            echo 'SPRING_DATASOURCE_URL="${{ secrets.DB_ENDPOINT }}"' | sudo tee -a /etc/environment
-            echo 'SPRING_DATASOURCE_USERNAME="${{ secrets.DB_USERNAME }}"' | sudo tee -a /etc/environment
-            echo 'SPRING_DATASOURCE_PASSWORD="${{ secrets.DB_PASSWORD }}"' | sudo tee -a /etc/environment
+            echo 'export SPRING_MAIL_PASSWORD=InforOnda2025' | sudo tee -a /etc/default/tomcat10
+            echo 'SPRING_MAIL_PASSWORD=InforOnda2025' | sudo tee -a /etc/environment
+            echo 'export SPRING_DATASOURCE_URL=jdbc:mysql://basedatos1.ctouc2akatea.us-east-1.rds.amazonaws.com:3306/basedatos1' | sudo tee -a /etc/default/tomcat10
+            echo 'export SPRING_DATASOURCE_USERNAME=admin' | sudo tee -a /etc/default/tomcat10
+            echo 'export SPRING_DATASOURCE_PASSWORD=admin123' | sudo tee -a /etc/default/tomcat10
+            echo 'SPRING_DATASOURCE_URL=jdbc:mysql://basedatos1.ctouc2akatea.us-east-1.rds.amazonaws.com:3306/basedatos1' | sudo tee -a /etc/environment
+            echo 'SPRING_DATASOURCE_USERNAME=admin' | sudo tee -a /etc/environment
+            echo 'SPRING_DATASOURCE_PASSWORD=admin123' | sudo tee -a /etc/environment
             sudo systemctl restart tomcat10
