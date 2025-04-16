@@ -39,7 +39,7 @@ jobs:
         uses: appleboy/scp-action@v0.1.5  # Copiar archivos a servidor remoto
         with:
           host: 54.210.10.71    # Dirección IP de la instancia EC2
-          username: admin  # Nombre usuario EC2
+          username: prueba1  # Nombre usuario EC2
           key: |
             -----BEGIN RSA PRIVATE KEY-----
             MIIEowIBAAKCAQEArOXkdvV1LtXdULwGO/a4dOc099Vefrq+KRpxBte1RJXp6Ile
@@ -77,7 +77,7 @@ jobs:
         uses: appleboy/ssh-action@master        # Acción ssh-action
         with:
           host: 54.210.10.71         # Dirección IP de EC2
-          username: admin   # Nombre de usuario de EC2
+          username: prueba1   # Nombre de usuario de EC2
           key: |
             -----BEGIN RSA PRIVATE KEY-----
             MIIEowIBAAKCAQEArOXkdvV1LtXdULwGO/a4dOc099Vefrq+KRpxBte1RJXp6Ile
