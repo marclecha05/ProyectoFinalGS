@@ -1,7 +1,7 @@
 // renderCalendario.js
 
 const CLIENT_ID = '813036393361-4e3ab0khvp709s26a9ug0nkv03708tqh.apps.googleusercontent.com';
-const API_KEY = 'AIzaSyCoamXsvr7JzW4WOnsJwXgxTES0SLHo9Z0';
+const API_KEY = $API_KEY;
 const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest';
 const SCOPES = 'https://www.googleapis.com/auth/calendar.readonly';
 
