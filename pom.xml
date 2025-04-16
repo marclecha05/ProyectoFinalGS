@@ -97,6 +97,15 @@
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version> <!-- Use the latest version -->
+                <configuration>
+                    <source>21</source> <!-- Java version -->
+                    <target>21</target>
+                </configuration>
+            </plugin>
         </plugins>
         <resources>
             <!-- Filtra los archivos de recursos, excepto los archivos estáticos como imágenes -->
