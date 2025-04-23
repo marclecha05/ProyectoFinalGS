@@ -23,7 +23,7 @@ jobs:
           mkdir -p ~/.m2
           echo "${{ secrets.MAVEN_SETTINGS }}" > ~/.m2/settings.xml
 
-      - name: Set up Java
+      - name: Set up Java c
         uses: actions/setup-java@v3
         with:
           java-version: '21'
