@@ -63,7 +63,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}    # Dirección IP de la instancia EC2
           username: ${{ secrets.EC2_USERNAME }}  # Nombre usuario EC2
           key: ${{ secrets.EC2_PRIVATE_KEY }}    # Clave privada SSH
-          source: target/ProyectoFinalGS-0.0.1-SNAPSHOT.war  # Ruta del archivo .war
+          source: target/turnify-0.0.1-SNAPSHOT.war  # Ruta del archivo .war
           target: /home/ubuntu/                   # Carpeta destino en EC2
           strip_components: 1                     # Elimina directorios
 
@@ -77,9 +77,9 @@ jobs:
           script: |
             sudo rm -r /var/lib/tomcat10/webapps/ROOT.war
             sudo rm -r /var/lib/tomcat10/webapps/ROOT
-            sudo mv /home/ubuntu/ProyectoFinalGS-0.0.1-SNAPSHOT.war /var/lib/tomcat10/webapps/ROOT.war  
-            sudo chown tomcat:tomcat /var/lib/tomcat10/webapps/ROOT.war  
-            sudo chmod 755 /var/lib/tomcat10/webapps/ROOT.war 
+            sudo mv /home/ubuntu/turnify-0.0.1-SNAPSHOT.war /var/lib/tomcat10/webapps/turnify.war  
+            sudo chown tomcat:tomcat /var/lib/tomcat10/webapps/turnify.war  
+            sudo chmod 755 /var/lib/tomcat10/webapps/turnify.war 
             echo 'export SPRING_MAIL_PASSWORD="${{ secrets.EMAIL_PASSWORD }}"' | sudo tee -a /etc/default/tomcat10
             echo 'SPRING_MAIL_PASSWORD="${{ secrets.EMAIL_PASSWORD }}"' | sudo tee -a /etc/environment
             echo 'export SPRING_DATASOURCE_URL="${{ secrets.DB_ENDPOINT }}"' | sudo tee -a /etc/default/tomcat10
