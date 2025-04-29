@@ -81,12 +81,12 @@ jobs:
             sudo chown tomcat:tomcat /var/lib/tomcat10/webapps/turnify.war  
             sudo chmod 755 /var/lib/tomcat10/webapps/turnify.war
             sudo chmod 755 /var/lib/tomcat10/webapps/turnify 
-            echo 'export SPRING_MAIL_PASSWORD="${{ secrets.EMAIL_PASSWORD }}"' | sudo tee -a /etc/default/tomcat10
-            echo 'SPRING_MAIL_PASSWORD="${{ secrets.EMAIL_PASSWORD }}"' | sudo tee -a /etc/environment
-            echo 'export SPRING_DATASOURCE_URL="${{ secrets.DB_ENDPOINT }}"' | sudo tee -a /etc/default/tomcat10
-            echo 'export SPRING_DATASOURCE_USERNAME="${{ secrets.DB_USERNAME }}"' | sudo tee -a /etc/default/tomcat10
-            echo 'export SPRING_DATASOURCE_PASSWORD="${{ secrets.DB_PASSWORD }}"' | sudo tee -a /etc/default/tomcat10
-            echo 'SPRING_DATASOURCE_URL="${{ secrets.DB_ENDPOINT }}"' | sudo tee -a /etc/environment
-            echo 'SPRING_DATASOURCE_USERNAME="${{ secrets.DB_USERNAME }}"' | sudo tee -a /etc/environment
-            echo 'SPRING_DATASOURCE_PASSWORD="${{ secrets.DB_PASSWORD }}"' | sudo tee -a /etc/environment
+            echo "export EMAIL_PASSWORD=${{ secrets.EMAIL_PASSWORD }}" | sudo tee -a /etc/default/tomcat10
+            echo "export EMAIL_PASSWORD=${{ secrets.EMAIL_PASSWORD }}" | sudo tee -a /etc/environment
+            echo "export DB_ENDPOINT=${{ secrets.DB_ENDPOINT }}" | sudo tee -a /etc/default/tomcat10
+            echo "export DB_USERNAME=${{ secrets.DB_USERNAME }}" | sudo tee -a /etc/default/tomcat10
+            echo "export DB_PASSWORD=${{ secrets.DB_PASSWORD }}" | sudo tee -a /etc/default/tomcat10
+            echo "export DB_ENDPOINT=${{ secrets.DB_ENDPOINT }}" | sudo tee -a /etc/environment
+            echo "export DB_USERNAME=${{ secrets.DB_USERNAME }}" | sudo tee -a /etc/environment
+            echo "export DB_PASSWORD=${{ secrets.DB_PASSWORD }}" | sudo tee -a /etc/environment
             sudo systemctl restart tomcat10
