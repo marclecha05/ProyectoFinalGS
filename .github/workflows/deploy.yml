@@ -8,34 +8,8 @@ on:
 jobs:
   build-and-deploy:                     # Define trabajo llamado buildanddeploy
     runs-on: ubuntu-latest              # El trabajo se ejecuta en Ubuntu
-    env:
-      DB_ENDPOINT: ${{ secrets.DB_ENDPOINT }}
-      DB_USERNAME: ${{ secrets.DB_USERNAME }}
-      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Maven settings-security.xml
-        run: |
-          mkdir -p ~/.m2
-          echo "${{ secrets.MAVEN_SECURITY_SETTINGS }}" > ~/.m2/settings-security.xml
-
-      - name: Set up Maven settings.xml
-        run: |
-          mkdir -p ~/.m2
-          echo "${{ secrets.MAVEN_SETTINGS }}" > ~/.m2/settings.xml
-
-      - name: Set up Java
-        uses: actions/setup-java@v2
-        with:
-          java-version: '21'
-          distribution: 'temurin'
-
-      - name: Run Maven tests
-        run: mvn clean test
-
       # 1️⃣ Descargar el código fuente del repositorio
       - name: Checkout source code       # Nombre del paso.
         uses: actions/checkout@v2        # Clonar el repositorio.
@@ -46,6 +20,11 @@ jobs:
         with:
           java-version: 21              # Especifica la versión de Java (21).
           distribution: temurin         # Utiliza dist OpenJDK llamada Temurin.
+      - name: Set environment variables
+        run: |
+          echo "SPRING_DATASOURCE_URL=${{ secrets.DB_ENDPOINT }}" >> $GITHUB_ENV
+          echo "SPRING_DATASOURCE_USERNAME=${{ secrets.DB_USERNAME }}" >> $GITHUB_ENV
+          echo "SPRING_DATASOURCE_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
 
 
       # 3️⃣ Construir la aplicación usando Maven
@@ -78,14 +57,13 @@ jobs:
             sudo rm -r /var/lib/tomcat10/webapps/turnify
             sudo mv /home/ubuntu/turnify-0.0.1-SNAPSHOT.war /var/lib/tomcat10/webapps/turnify.war  
             sudo chown tomcat:tomcat /var/lib/tomcat10/webapps/turnify.war  
-            sudo chmod 755 /var/lib/tomcat10/webapps/turnify.war
-            sudo chmod 755 /var/lib/tomcat10/webapps/turnify 
-            echo "export EMAIL_PASSWORD=${{ secrets.EMAIL_PASSWORD }}" | sudo tee -a /etc/default/tomcat10
-            echo "export EMAIL_PASSWORD=${{ secrets.EMAIL_PASSWORD }}" | sudo tee -a /etc/environment
-            echo "export DB_ENDPOINT=${{ secrets.DB_ENDPOINT }}" | sudo tee -a /etc/default/tomcat10
-            echo "export DB_USERNAME=${{ secrets.DB_USERNAME }}" | sudo tee -a /etc/default/tomcat10
-            echo "export DB_PASSWORD=${{ secrets.DB_PASSWORD }}" | sudo tee -a /etc/default/tomcat10
-            echo "export DB_ENDPOINT=${{ secrets.DB_ENDPOINT }}" | sudo tee -a /etc/environment
-            echo "export DB_USERNAME=${{ secrets.DB_USERNAME }}" | sudo tee -a /etc/environment
-            echo "export DB_PASSWORD=${{ secrets.DB_PASSWORD }}" | sudo tee -a /etc/environment
+            sudo chmod 755 /var/lib/tomcat10/webapps/turnify.war 
+            echo 'export SPRING_MAIL_PASSWORD="${{ secrets.EMAIL_PASSWORD }}"' | sudo tee -a /etc/default/tomcat10
+            echo 'SPRING_MAIL_PASSWORD="${{ secrets.EMAIL_PASSWORD }}"' | sudo tee -a /etc/environment
+            echo 'export SPRING_DATASOURCE_URL="${{ secrets.DB_ENDPOINT }}"' | sudo tee -a /etc/default/tomcat10
+            echo 'export SPRING_DATASOURCE_USERNAME="${{ secrets.DB_USERNAME }}"' | sudo tee -a /etc/default/tomcat10
+            echo 'export SPRING_DATASOURCE_PASSWORD="${{ secrets.DB_PASSWORD }}"' | sudo tee -a /etc/default/tomcat10
+            echo 'SPRING_DATASOURCE_URL="${{ secrets.DB_ENDPOINT }}"' | sudo tee -a /etc/environment
+            echo 'SPRING_DATASOURCE_USERNAME="${{ secrets.DB_USERNAME }}"' | sudo tee -a /etc/environment
+            echo 'SPRING_DATASOURCE_PASSWORD="${{ secrets.DB_PASSWORD }}"' | sudo tee -a /etc/environment
             sudo systemctl restart tomcat10
