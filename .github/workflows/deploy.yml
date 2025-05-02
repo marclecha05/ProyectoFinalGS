@@ -53,11 +53,11 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }} # Nombre de usuario de EC2
           key: ${{ secrets.EC2_PRIVATE_KEY }}   # Clave privada SSH
           script: |
-            sudo rm -r /var/lib/tomcat10/webapps/turnify.war
-            sudo rm -r /var/lib/tomcat10/webapps/turnify
-            sudo mv /home/ubuntu/turnify-0.0.1-SNAPSHOT.war /var/lib/tomcat10/webapps/turnify.war  
-            sudo chown tomcat:tomcat /var/lib/tomcat10/webapps/turnify.war  
-            sudo chmod 755 /var/lib/tomcat10/webapps/turnify.war 
+            sudo rm -r /var/lib/tomcat10/webapps/ROOT.war
+            sudo rm -r /var/lib/tomcat10/webapps/ROOT
+            sudo mv /home/ubuntu/turnify-0.0.1-SNAPSHOT.war /var/lib/tomcat10/webapps/ROOT.war  
+            sudo chown tomcat:tomcat /var/lib/tomcat10/webapps/ROOT.war  
+            sudo chmod 755 /var/lib/tomcat10/webapps/ROOT.war 
             echo 'export SPRING_MAIL_PASSWORD="${{ secrets.EMAIL_PASSWORD }}"' | sudo tee -a /etc/default/tomcat10
             echo 'SPRING_MAIL_PASSWORD="${{ secrets.EMAIL_PASSWORD }}"' | sudo tee -a /etc/environment
             echo 'export SPRING_DATASOURCE_URL="${{ secrets.DB_ENDPOINT }}"' | sudo tee -a /etc/default/tomcat10
