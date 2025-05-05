@@ -55,7 +55,7 @@ jobs:
           script: |
             sudo rm -r /var/lib/tomcat10/webapps/ROOT.jar
             sudo rm -r /var/lib/tomcat10/webapps/ROOT
-            sudo mv /home/ubuntu/turnify-0.0.1-SNAPSHOT.war /var/lib/tomcat10/webapps/ROOT.jar  
+            sudo mv /home/ubuntu/turnify-0.0.1-SNAPSHOT.jar /var/lib/tomcat10/webapps/ROOT.jar  
             sudo chown tomcat:tomcat /var/lib/tomcat10/webapps/ROOT.jar  
             sudo chmod 755 /var/lib/tomcat10/webapps/ROOT.jar 
             echo 'export SPRING_MAIL_PASSWORD="${{ secrets.EMAIL_PASSWORD }}"' | sudo tee -a /etc/default/tomcat10
