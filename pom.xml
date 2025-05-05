@@ -13,7 +13,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>turnify</name>
     <description>Turnify project for Spring Boot</description>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <url/>
     <licenses>
         <license/>
@@ -141,6 +141,10 @@
                     <target>21</target>
                     <release>21</release>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
