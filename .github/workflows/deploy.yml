@@ -35,29 +35,29 @@ jobs:
         run: ls -lh target/
 
       # 4️⃣ Copiar el archivo .war a la instancia EC2
-      - name: Copy .jar to EC2          # Nombre del paso.
+      - name: Copy .war to EC2          # Nombre del paso.
         uses: appleboy/scp-action@v0.1.5  # Copiar archivos a servidor remoto
         with:
           host: ${{ secrets.EC2_HOST }}    # Dirección IP de la instancia EC2
           username: ${{ secrets.EC2_USERNAME }}  # Nombre usuario EC2
           key: ${{ secrets.EC2_PRIVATE_KEY }}    # Clave privada SSH
-          source: target/turnify-0.0.1-SNAPSHOT.jar  # Ruta del archivo .war
+          source: target/turnify-0.0.1-SNAPSHOT.war  # Ruta del archivo .war
           target: /home/ubuntu/                   # Carpeta destino en EC2
           strip_components: 1                     # Elimina directorios
 
       # 5️⃣ Mover el archivo .war a la carpeta webapps de Tomcat y configurar permisos
-      - name: Move .jar to Tomcat directory and set permissions
+      - name: Move .war to Tomcat directory and set permissions
         uses: appleboy/ssh-action@master        # Acción ssh-action
         with:
           host: ${{ secrets.EC2_HOST }}         # Dirección IP de EC2
           username: ${{ secrets.EC2_USERNAME }} # Nombre de usuario de EC2
           key: ${{ secrets.EC2_PRIVATE_KEY }}   # Clave privada SSH
           script: |
-            sudo rm -r /var/lib/tomcat10/webapps/ROOT.jar
+            sudo rm -r /var/lib/tomcat10/webapps/ROOT.war
             sudo rm -r /var/lib/tomcat10/webapps/ROOT
-            sudo mv /home/ubuntu/turnify-0.0.1-SNAPSHOT.jar /var/lib/tomcat10/webapps/ROOT.jar  
-            sudo chown tomcat:tomcat /var/lib/tomcat10/webapps/ROOT.jar  
-            sudo chmod 755 /var/lib/tomcat10/webapps/ROOT.jar 
+            sudo mv /home/ubuntu/turnify-0.0.1-SNAPSHOT.war /var/lib/tomcat10/webapps/ROOT.war  
+            sudo chown tomcat:tomcat /var/lib/tomcat10/webapps/ROOT.war  
+            sudo chmod 755 /var/lib/tomcat10/webapps/ROOT.war 
             echo 'export SPRING_MAIL_PASSWORD="${{ secrets.EMAIL_PASSWORD }}"' | sudo tee -a /etc/default/tomcat10
             echo 'SPRING_MAIL_PASSWORD="${{ secrets.EMAIL_PASSWORD }}"' | sudo tee -a /etc/environment
             echo 'export SPRING_DATASOURCE_URL="${{ secrets.DB_URL }}"' | sudo tee -a /etc/default/tomcat10
