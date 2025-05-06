@@ -10,13 +10,9 @@ import java.io.IOException;
 @Controller
 public class HomeController {
 
-
-
-
-
-    @GetMapping("/calendarioempresa")
-    public String calendarioProveedor(Model model) {
-        model.addAttribute("title", "Calendario Proveedor Laboral");
-        return "calendarioProveedor";
+    @GetMapping("/")
+    public String redirectToLogin() {
+        return "redirect:/login";
     }
 }
+
