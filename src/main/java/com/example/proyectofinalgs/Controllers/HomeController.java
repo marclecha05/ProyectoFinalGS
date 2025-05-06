@@ -14,5 +14,6 @@ public class HomeController {
     public String redirectToLogin() {
         return "redirect:/login";
     }
+
 }
 
