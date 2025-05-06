@@ -54,7 +54,7 @@ jobs:
           key: ${{ secrets.EC2_PRIVATE_KEY }}   # Clave privada SSH
           script: |
             sudo rm -r /var/lib/tomcat10/webapps/ROOT.war
-            sudo rm -r /var/lib/tomcat10/webapps/ROOT
+            sudo rm -rf /var/lib/tomcat10/webapps/ROOT
             sudo cp /home/ubuntu/turnify-0.0.1-SNAPSHOT.war /var/lib/tomcat10/webapps/ROOT.war  
             sudo chown tomcat:tomcat /var/lib/tomcat10/webapps/ROOT.war  
             sudo chmod 755 /var/lib/tomcat10/webapps/ROOT.war 
