@@ -16,9 +16,9 @@ public class LoginController {
         this.userService = userService;
     }
 
-    @GetMapping("/")
+    @GetMapping("/login")
     public String login(Model model) {
-        model.addAttribute("users", userService.findAll());
+        //model.addAttribute("users", userService.findAll());
         return "login";
     }
 }
