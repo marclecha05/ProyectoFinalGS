@@ -20,6 +20,7 @@ public class CustomErrorController implements ErrorController {
         this.errorAttributes = errorAttributes;
     }
 
+
     @RequestMapping("/error")
     public void handleError(HttpServletRequest request,HttpServletResponse response, Model model) throws IOException {
         // Obtén el código de estado HTTP directamente desde el request
