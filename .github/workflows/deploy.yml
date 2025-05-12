@@ -20,7 +20,7 @@ jobs:
         with:
           java-version: 21              # Especifica la versión de Java (21).
           distribution: temurin         # Utiliza dist OpenJDK llamada Temurin.
-      - name: Set environment variables
+      #- name: Set environment variables
         #run: |
           #echo "SPRING_DATASOURCE_URL=${{ secrets.DB_URL }}" >> $GITHUB_ENV
           #echo "SPRING_DATASOURCE_USERNAME=${{ secrets.DB_USERNAME }}" >> $GITHUB_ENV
