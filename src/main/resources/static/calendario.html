@@ -149,5 +149,47 @@
     </div>
 </div>
 
+<script>
+    const calendarDays = document.getElementById("calendarDays");
+    const monthTitle = document.getElementById("monthTitle");
+
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = date.getMonth(); // 0-indexed
+    const today = date.getDate();
+
+    const months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+
+    monthTitle.textContent = `${months[month]} ${year}`;
+
+    const firstDay = new Date(year, month, 1).getDay();
+    const lastDate = new Date(year, month + 1, 0).getDate();
+
+    // Añadir días del mes anterior si el mes no empieza en domingo
+    for (let i = 0; i < firstDay; i++) {
+        const emptyDiv = document.createElement("div");
+        emptyDiv.className = "col day inactive";
+        calendarDays.appendChild(emptyDiv);
+    }
+
+    // Añadir los días del mes actual
+    for (let day = 1; day <= lastDate; day++) {
+        const dayDiv = document.createElement("div");
+        dayDiv.className = "col day";
+        dayDiv.textContent = day;
+
+        if (day === today) {
+            dayDiv.classList.add("selected");
+        }
+
+        dayDiv.addEventListener("click", () => {
+            document.querySelectorAll(".day").forEach(el => el.classList.remove("selected"));
+            dayDiv.classList.add("selected");
+        });
+
+        calendarDays.appendChild(dayDiv);
+    }
+</script>
 </body>
 </html>
