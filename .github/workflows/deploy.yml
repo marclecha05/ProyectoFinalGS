@@ -6,17 +6,18 @@ on:
       - master                            # Solo se ejecuta si push en rama main
 
 jobs:
-  build-and-deploy:                     # Define trabajo llamado buildanddeploy
-    runs-on: ubuntu-latest              # El trabajo se ejecuta en Ubuntu
+  deploy:
+    name: Build and Deploy WAR to EC2
+    runs-on: ubuntu-latest
 
     steps:
       # 1️⃣ Descargar el código fuente del repositorio
       - name: Checkout source code       # Nombre del paso.
-        uses: actions/checkout@v2        # Clonar el repositorio.
+        uses: actions/checkout@v3        # Clonar el repositorio.
 
       # 2️⃣ Configurar JDK 21 (Java Development Kit)
       - name: Set up JDK 21             # Nombre del paso.
-        uses: actions/setup-java@v2     # Configurar el entorno Java.
+        uses: actions/setup-java@v3     # Configurar el entorno Java.
         with:
           java-version: 21              # Especifica la versión de Java (21).
           distribution: temurin         # Utiliza dist OpenJDK llamada Temurin.
@@ -28,37 +29,41 @@ jobs:
 
 
       # 3️⃣ Construir la aplicación usando Maven
-      - name: Build with Maven          # Nombre del paso.
-        run: mvn -X clean package          # Construir proyecto, generando .war.
+      - name: Build with Maven
+        working-directory: ProyectoFinalGS
+        run: mvn clean package -DskipTests
 
-      - name: Listar contenido de target
-        run: ls -lh target/
+      - name: Verify WAR file existence
+        run: |
+          ls -l ProyectoFinalGS/target
 
       # 4️⃣ Copiar el archivo .war a la instancia EC2
-      - name: Copy .war to EC2          # Nombre del paso.
+      - name: Upload WAR to EC2          # Nombre del paso.
         uses: appleboy/scp-action@v0.1.5  # Copiar archivos a servidor remoto
         with:
           host: ${{ secrets.EC2_HOST }}    # Dirección IP de la instancia EC2
           username: ${{ secrets.EC2_USERNAME }}  # Nombre usuario EC2
-          key: ${{ secrets.EC2_PRIVATE_KEY }}    # Clave privada SSH
-          source: target/turnify-0.0.1-SNAPSHOT.war  # Ruta del archivo .war
-          target: /home/ubuntu/                   # Carpeta destino en EC2
+          key: ${{ secrets.EC2_PRIVATE_KEY }} # Clave privada SSH
+          port: 22
+          source: ProyectoFinalGS/target/ProyectoFinalGS-0.0.1-SNAPSHOT.war  # Ruta del archivo .war
+          target: /home/${{ secrets.EC2_USER }}/                   # Carpeta destino en EC2
           strip_components: 1                     # Elimina directorios
 
       # 5️⃣ Mover el archivo .war a la carpeta webapps de Tomcat y configurar permisos
-      - name: Move .war to Tomcat directory and set permissions
+      - name: Move WAR to Tomcat and cleanup old ROOT
         uses: appleboy/ssh-action@master        # Acción ssh-action
         with:
           host: ${{ secrets.EC2_HOST }}         # Dirección IP de EC2
           username: ${{ secrets.EC2_USERNAME }} # Nombre de usuario de EC2
           key: ${{ secrets.EC2_PRIVATE_KEY }}   # Clave privada SSH
+          port: 22
           script: |
             sudo rm -r /var/lib/tomcat10/webapps/ROOT.war
-            sudo rm -rf /var/lib/tomcat10/webapps/ROOT
-            sudo cp /home/ubuntu/turnify-0.0.1-SNAPSHOT.war /var/lib/tomcat10/webapps/ROOT.war  
+            sudo rm -r /var/lib/tomcat10/webapps/ROOT
+            sudo mv /home/ubuntu/ProyectoFinalGS-0.0.1-SNAPSHOT.war /var/lib/tomcat10/webapps/ROOT.war  
             sudo chown tomcat:tomcat /var/lib/tomcat10/webapps/ROOT.war  
             sudo chmod 755 /var/lib/tomcat10/webapps/ROOT.war 
-            #echo 'export SPRING_MAIL_PASSWORD="${{ secrets.EMAIL_PASSWORD }}"' | sudo tee -a /etc/default/tomcat10
+          #echo 'export SPRING_MAIL_PASSWORD="${{ secrets.EMAIL_PASSWORD }}"' | sudo tee -a /etc/default/tomcat10
             #echo 'SPRING_MAIL_PASSWORD="${{ secrets.EMAIL_PASSWORD }}"' | sudo tee -a /etc/environment
             #echo 'export SPRING_DATASOURCE_URL="${{ secrets.DB_URL }}"' | sudo tee -a /etc/default/tomcat10
             #echo 'export SPRING_DATASOURCE_USERNAME="${{ secrets.DB_USERNAME }}"' | sudo tee -a /etc/default/tomcat10

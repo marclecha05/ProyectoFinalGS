@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.example</groupId>
-    <artifactId>turnify</artifactId>
+    <artifactId>ProyectoFinalGS</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>turnify</name>
-    <description>Turnify project for Spring Boot</description>
+    <name>ProyectoFinalGS</name>
+    <description>ProyectoFinalGS project for Spring Boot</description>
     <packaging>war</packaging>
     <url/>
     <licenses>
