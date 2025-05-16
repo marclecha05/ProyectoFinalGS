@@ -21,11 +21,11 @@ jobs:
         with:
           java-version: 21              # Especifica la versión de Java (21).
           distribution: temurin         # Utiliza dist OpenJDK llamada Temurin.
-      #- name: Set environment variables
-        #run: |
-          #echo "SPRING_DATASOURCE_URL=${{ secrets.DB_URL }}" >> $GITHUB_ENV
-          #echo "SPRING_DATASOURCE_USERNAME=${{ secrets.DB_USERNAME }}" >> $GITHUB_ENV
-          #echo "SPRING_DATASOURCE_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
+      - name: Set environment variables
+        run: |
+          echo "SPRING_DATASOURCE_URL=${{ secrets.DB_URL }}" >> $GITHUB_ENV
+          echo "SPRING_DATASOURCE_USERNAME=${{ secrets.DB_USERNAME }}" >> $GITHUB_ENV
+          echo "SPRING_DATASOURCE_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
 
 
       # 3️⃣ Construir la aplicación usando Maven
@@ -51,11 +51,11 @@ jobs:
 
       # 5️⃣ Mover el archivo .war a la carpeta webapps de Tomcat y configurar permisos
       - name: Move WAR to Tomcat and cleanup old ROOT
-        uses: appleboy/ssh-action@master        # Acción ssh-action
+        uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.EC2_HOST }}         # Dirección IP de EC2
-          username: ${{ secrets.EC2_USERNAME }} # Nombre de usuario de EC2
-          key: ${{ secrets.EC2_PRIVATE_KEY }}   # Clave privada SSH
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
           port: 22
           script: |
             sudo rm -r /var/lib/tomcat10/webapps/ROOT.war
@@ -63,12 +63,12 @@ jobs:
             sudo mv /home/ubuntu/ProyectoFinalGS-0.0.1-SNAPSHOT.war /var/lib/tomcat10/webapps/ROOT.war  
             sudo chown tomcat:tomcat /var/lib/tomcat10/webapps/ROOT.war  
             sudo chmod 755 /var/lib/tomcat10/webapps/ROOT.war 
-          #echo 'export SPRING_MAIL_PASSWORD="${{ secrets.EMAIL_PASSWORD }}"' | sudo tee -a /etc/default/tomcat10
-            #echo 'SPRING_MAIL_PASSWORD="${{ secrets.EMAIL_PASSWORD }}"' | sudo tee -a /etc/environment
-            #echo 'export SPRING_DATASOURCE_URL="${{ secrets.DB_URL }}"' | sudo tee -a /etc/default/tomcat10
-            #echo 'export SPRING_DATASOURCE_USERNAME="${{ secrets.DB_USERNAME }}"' | sudo tee -a /etc/default/tomcat10
-            #echo 'export SPRING_DATASOURCE_PASSWORD="${{ secrets.DB_PASSWORD }}"' | sudo tee -a /etc/default/tomcat10
-            #echo 'SPRING_DATASOURCE_URL="${{ secrets.DB_URL }}"' | sudo tee -a /etc/environment
-            #echo 'SPRING_DATASOURCE_USERNAME="${{ secrets.DB_USERNAME }}"' | sudo tee -a /etc/environment
-            #echo 'SPRING_DATASOURCE_PASSWORD="${{ secrets.DB_PASSWORD }}"' | sudo tee -a /etc/environment
+            echo 'export SPRING_MAIL_PASSWORD="${{ secrets.EMAIL_PASSWORD }}"' | sudo tee -a /etc/default/tomcat10
+            echo 'SPRING_MAIL_PASSWORD="${{ secrets.EMAIL_PASSWORD }}"' | sudo tee -a /etc/environment
+            echo 'export SPRING_DATASOURCE_URL="${{ secrets.DB_URL }}"' | sudo tee -a /etc/default/tomcat10
+            echo 'export SPRING_DATASOURCE_USERNAME="${{ secrets.DB_USERNAME }}"' | sudo tee -a /etc/default/tomcat10
+            echo 'export SPRING_DATASOURCE_PASSWORD="${{ secrets.DB_PASSWORD }}"' | sudo tee -a /etc/default/tomcat10
+            echo 'SPRING_DATASOURCE_URL="${{ secrets.DB_URL }}"' | sudo tee -a /etc/environment
+            echo 'SPRING_DATASOURCE_USERNAME="${{ secrets.DB_USERNAME }}"' | sudo tee -a /etc/environment
+            echo 'SPRING_DATASOURCE_PASSWORD="${{ secrets.DB_PASSWORD }}"' | sudo tee -a /etc/environment
             sudo systemctl restart tomcat10
