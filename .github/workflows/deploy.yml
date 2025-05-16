@@ -45,7 +45,7 @@ jobs:
           key: ${{ secrets.EC2_PRIVATE_KEY }} # Clave privada SSH
           port: 22
           source: target/ProyectoFinalGS-0.0.1-SNAPSHOT.war  # Ruta del archivo .war
-          target: /home/${{ secrets.EC2_USER }}/                   # Carpeta destino en EC2
+          target: /home/ubuntu/                   # Carpeta destino en EC2
           strip_components: 1                     # Elimina directorios
 
       # 5️⃣ Mover el archivo .war a la carpeta webapps de Tomcat y configurar permisos
