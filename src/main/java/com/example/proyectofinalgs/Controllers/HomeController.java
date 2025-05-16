@@ -10,10 +10,5 @@ import java.io.IOException;
 @Controller
 public class HomeController {
 
-    @GetMapping("/")
-    public String redirectToLogin() {
-        return "redirect:/login";
-    }
-
 }
 
