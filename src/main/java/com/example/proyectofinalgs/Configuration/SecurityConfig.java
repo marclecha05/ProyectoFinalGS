@@ -43,7 +43,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/login")
-                        .defaultSuccessUrl("/home", true) // Redirige a "/home" tras login
+                        //.defaultSuccessUrl("/home", true) // Redirige a "/home" tras login
                         .failureUrl("/login?error")
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(customOAuth2UserService))
