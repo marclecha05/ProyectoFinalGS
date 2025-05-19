@@ -84,10 +84,14 @@ public class SecurityConfig {
                 userRepository.save(usuario); // Guarda el usuario con datos mínimos
                 response.sendRedirect("/register.html");
             } else {
-                switch (usuario.getRol()) {
-                    case "CLIENTE" -> response.sendRedirect("/home.html");
-                    case "PROVEEDOR" -> response.sendRedirect("/calendarioempresa.html");
-                    default -> response.sendRedirect("/register.html");
+                if (usuario.getRol() == null || usuario.getRol().isBlank()) {
+                    response.sendRedirect("/register.html");
+                } else {
+                    switch (usuario.getRol()) {
+                        case "CLIENTE" -> response.sendRedirect("/home.html");
+                        case "PROVEEDOR" -> response.sendRedirect("/calendarioempresa.html");
+                        default -> response.sendRedirect("/register.html");
+                    }
                 }
             }
 

@@ -22,14 +22,14 @@ public class CustomErrorController implements ErrorController {
 
 
     @RequestMapping("/error")
-    public void handleError(HttpServletRequest request,HttpServletResponse response, Model model) throws IOException {
-        // Obtén el código de estado HTTP directamente desde el request
+    public String handleError(HttpServletRequest request, Model model) {
         int statusCode = (int) request.getAttribute("jakarta.servlet.error.status_code");
         String errorMessage = (String) request.getAttribute("jakarta.servlet.error.message");
 
         model.addAttribute("status", statusCode);
         model.addAttribute("message", errorMessage != null ? errorMessage : "Error inesperado");
 
-        response.sendRedirect("/error.html");
+        return "error"; // devuelve una vista llamada error.html o error.jsp en /templates o /WEB-INF
     }
+
 }
