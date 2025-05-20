@@ -29,7 +29,7 @@ public class UserController {
         this.userService = userService;
         this.emailService = emailService;
     }
-    /*@GetMapping("/users")
+    @GetMapping("/users")
     List<Usuario> all() {
         return userService.findAll();
     }
@@ -76,6 +76,6 @@ public class UserController {
         userService.deleteById(loggedUsuario.getId());
 
         response.sendRedirect("/logout");
-    }*/
+    }
 }
 
