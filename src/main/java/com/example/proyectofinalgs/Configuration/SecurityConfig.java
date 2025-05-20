@@ -37,7 +37,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/register.html", "/registerdos.html", "/registertres.html", "/login","/oauth2/**","/registerForm", "/logout", "/error", "/image/**","/**").permitAll()
+                        .requestMatchers("/register.html", "/registerdos.html", "/registertres.html", "/login","/oauth2/**","/registerForm", "/logout", "/error", "/image/**","/**", "/static/**").permitAll()
                         .requestMatchers("/home", "/user.html").hasRole("CLIENTE")
                         .requestMatchers("/calendarioProveedor.html", "/userProveedor").hasRole("PROVEEDOR")
                         .anyRequest().authenticated())
